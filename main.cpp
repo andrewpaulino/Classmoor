@@ -1,8 +1,22 @@
+#include <iostream>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <aws/core/Aws.h>
+//#include <aws/core/Aws.h>
+
 int main(int argc, char *argv[])
 {
+
+
+    //AWS SDK test
+//    Aws::SDKOptions options;
+//    Aws::InitAPI(options);
+//    Aws::String test;
+
+//    test = "AWS SDK Connected";
+
+//    std::cout << test << std::endl;
+    //END TEST
+
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
@@ -17,4 +31,5 @@ int main(int argc, char *argv[])
     engine.load(url);
 
     return app.exec();
+//        Aws::ShutdownAPI(options);
 }

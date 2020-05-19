@@ -4,8 +4,8 @@ import QtGraphicalEffects 1.0
 
 Page {
     id: page
-    width: 1920
-    height: 1080
+    width: window.width
+    height: window.height
     contentWidth: 4
     title: qsTr("Classmoor")
     background: Rectangle {
@@ -21,16 +21,6 @@ Page {
         color: "#1f777c"
         radius: 6
         border.width: 0
-
-        DropShadow {
-            anchors.fill: rectangle1
-            horizontalOffset: 0
-            verticalOffset: 8
-            radius: 12.0
-            samples: 25
-            color: "#80000000"
-            source: rectangle1
-        }
     }
 
     Rectangle {
