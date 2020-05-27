@@ -2,9 +2,10 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>HomeForm.ui.qml</file>
-        <file>Page1Form.ui.qml</file>
-        <file>Page2Form.ui.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>undraw_teaching_f1cm.svg</file>
+        <file>setupView.qml</file>
+        <file>Setup.qml</file>
+        <file>SetupForm.ui.qml</file>
     </qresource>
 </RCC>

@@ -14,10 +14,16 @@ QML_IMPORT_PATH += /opt/Qt5.8.0/5.8/gcc_64/qml/QtGraphicalEffects
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 INCLUDEPATH += /usr/local/include
-LIBS += -L/usr/local/lib64 -laws-cpp-sdk-core -laws-cpp-sdk-s3
+LIBS += -L/usr/local/lib64 -laws-cpp-sdk-core -laws-cpp-sdk-s3 -laws-cpp-sdk-sns -laws-cpp-sdk-lambda -laws-cpp-sdk-dynamodb
 
 SOURCES += \
-        main.cpp
+        classmoor.cpp \
+        classmoorapplication.cpp \
+        dynamoclient.cpp \
+        lambdaclient.cpp \
+        main.cpp \
+        setup.cpp \
+        snsclient.cpp
 
 RESOURCES += qml.qrc
 # Additional import path used to resolve QML modules in Qt Creator's code model
@@ -37,3 +43,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 #INCLUDEPATH += $$PWD/../../../usr/local/include/aws
 #DEPENDPATH += $$PWD/../../../usr/local/include/aws
+
+HEADERS += \
+    classmoor.h \
+    classmoorapplication.h \
+    dynamoclient.h \
+    lambdaclient.h \
+    setup.h \
+    snsclient.h

@@ -17,21 +17,6 @@ ApplicationWindow {
 
         }
 
-//        ToolButton {
-//            id: toolButton
-//            text: stackView.depth > 1 ? "\u25C0" : "\u2630"
-//            anchors.left: parent
-//            implicitHeight: Qt.application.font.pixelSize * 5
-//            font.pixelSize: Qt.application.font.pixelSize * 1.6
-//            onClicked: {
-//                if (stackView.depth > 1) {
-//                    stackView.pop()
-//                } else {
-//                    drawer.open()
-//                }
-//            }
-//        }
-
         Label {
             id: classs
             text: "Classmoor"
@@ -50,16 +35,6 @@ ApplicationWindow {
 
         }
 
-//        Label {
-//            id: moor
-//            text: "moor"
-//            anchors.left: classs.right
-//            anchors.bottom: classs.bottom
-//            color: "#00656B"
-//            font.bold: true
-//            font.pixelSize: Qt.application.font.pixelSize * 4
-
-//        }
     }
 
     Drawer {
