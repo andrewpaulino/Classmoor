@@ -11,17 +11,20 @@
 #include <aws/lambda/model/InvokeRequest.h>
 #include <stdexcept>
 #include <fstream>
-
-
+#include <QDebug>
+#include <QString>
 
 class lambdaClient : public Aws::Lambda::LambdaClient {
 public:
     lambdaClient();
     lambdaClient(Aws::Client::ClientConfiguration config) : Aws::Lambda::LambdaClient(config) {
-        //do nothing
     };
-    void checkConnection();
+    bool joinClassroom(Aws::String name, Aws::String code);
+    bool checkConnection();
+    std::string getLastFunctionResult();
 private:
+    std::string lastFunctionResult;
+
 //   std::shared_ptr<Aws::Lambda::LambdaClient> m_client;
 };
 

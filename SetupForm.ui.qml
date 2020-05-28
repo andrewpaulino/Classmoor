@@ -20,14 +20,18 @@ Page {
 
     property bool isFilledOut: true
     property bool isFirstTimeSubmitting: false
+    property bool isDone: false
+    property bool isFound: false
 
     Connections {
         target: setup
         onFilledOut: {
-            console.log("IsFilledOut,1 ", isFilledOut);
             isFilledOut = isValid
-            isFirstTimeSubmitting= true
-            console.log("IsFilledOut,2 ", isFilledOut);
+            isFirstTimeSubmitting = true
+        }
+        onResults: {
+            isDone = done
+            isFound = found
         }
     }
 
@@ -154,12 +158,8 @@ Page {
                 placeholderText: qsTr("i.e CS8A")
                 font.pointSize: 15
             }
-
-            //            Connections {
-            //                target: classCodeField
-            //                editingFinished: setup.isClassCodeField(classCodeField.text)
-            //            }
         }
+
         Button {
             id: joinClassroomButton
             text: qsTr("Join Classroom")
@@ -184,8 +184,8 @@ Page {
             }
 
             background: Rectangle {
-                implicitWidth: parent.width
-                implicitHeight: parent.height
+//                implicitWidth: parent.width
+//                implicitHeight: parent.height
                 color: joinClassroomButton.down ? "#4d94ff" : "#2F6BA7"
                 radius: 6
             }
@@ -201,7 +201,7 @@ Page {
     states: [
         State {
             name: "Searching For Classroom"
-            when: isFilledOut == true && isFirstTimeSubmitting == true
+            when: isFilledOut == true && isFirstTimeSubmitting == true && isDone == false
             PropertyChanges {
                 target: searchingForClassroom
                 x: 724
@@ -250,7 +250,7 @@ Page {
         },
         State {
             name: "Classroom not found"
-
+            when: isDone == true && isFound == false
             PropertyChanges {
                 target: errorMessage
                 x: 32
@@ -277,7 +277,7 @@ Page {
         },
         State {
             name: "Please fill out both fields"
-            when: isFilledOut == false
+            when: isFilledOut == false && isFirstTimeSubmitting == false
             PropertyChanges {
                 target: errorMessage
                 x: 32
@@ -300,6 +300,55 @@ Page {
                 y: 395
                 width: 389
                 height: 362
+            }
+        },
+        State {
+            name: "found"
+            when: isDone == true && isFound == true
+            PropertyChanges {
+                target: searchingForClassroom
+                x: 724
+                y: 333
+                width: 460
+                height: 177
+                visible: true
+                anchors.verticalCenterOffset: "-157"
+            }
+
+            PropertyChanges {
+                target: busyIndicator
+                width: 60
+                height: 60
+                visible: true
+                Layout.fillHeight: false
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                Layout.fillWidth: false
+                font.pointSize: 71
+            }
+
+            PropertyChanges {
+                target: mainColumn
+                visible: false
+            }
+
+            PropertyChanges {
+                target: header
+                color: "#514c4c"
+                text: qsTr("Classroom Found!")
+                font.pixelSize: 31
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                font.family: "Lato"
+                font.bold: true
+                Layout.fillWidth: false
+            }
+
+            PropertyChanges {
+                target: subText
+                color: "#5e5454"
+                text: qsTr("We are adding you right now, hold tight...")
+                font.pixelSize: 20
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                font.family: "Lato"
             }
         }
     ]

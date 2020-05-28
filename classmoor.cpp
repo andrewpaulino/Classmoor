@@ -10,17 +10,31 @@ classmoor::classmoor(QQmlApplicationEngine* e) {
         clientConfig.region = "us-west-1";
 
         // TODO: Only check if authenticated
-//            SnsClient snsClient(clientConfig);
+            if (!isFirstTimeRunning()) {
+                //Read TOPIC ARN and pass to snsClient
+                //SnsClient snsClient(clientConfig, topicArn);
+                //snsClient.checkConnection();
+            }
+
             DynamoClient dynamoClient(clientConfig);
-            lambdaClient* lambda = new lambdaClient(clientConfig);
+            lambdaClient lambda = lambdaClient(clientConfig);
 
-//            snsClient.checkConnection();
+
             dynamoClient.checkConnection();
-            lambda->checkConnection();
+            bool isLambdaGood = false;
+            isLambdaGood = lambda.checkConnection();
 
+            qDebug() << isFirstTimeRunning();
             if (isFirstTimeRunning()) {
-                     qmlRegisterType<Setup>("com.classmoor.setup", 1, 0, "Setup");
-                engine->load(QStringLiteral("qrc:/Setup.qml"));
+
+//                do {
+                    qmlRegisterType<Setup>("com.classmoor.setup", 1, 0, "Setup");
+                    engine->load(QStringLiteral("qrc:/Setup.qml"));
+//                } while (isFirstTimeRunning());
+
+//                engine->quit();
+
+
             } else {
                 engine->load(QStringLiteral("qrc:/main.qml"));
             }
@@ -34,9 +48,9 @@ classmoor::classmoor(QQmlApplicationEngine* e) {
 bool classmoor::isFirstTimeRunning() {
 
 
-    QString pathToUserDataFile = "~/user_data.txt";
+    QString pathToUserDataFile = "user_data.txt";
     QFileInfo check_file(pathToUserDataFile);
-       if (check_file.exists() && check_file.isFile()) {
+       if (check_file.exists()) {
            return false;
        }
            return true;

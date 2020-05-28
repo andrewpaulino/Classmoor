@@ -22,6 +22,7 @@ SOURCES += \
         dynamoclient.cpp \
         lambdaclient.cpp \
         main.cpp \
+        modules.cpp \
         setup.cpp \
         snsclient.cpp
 
@@ -49,5 +50,6 @@ HEADERS += \
     classmoorapplication.h \
     dynamoclient.h \
     lambdaclient.h \
+    modules.h \
     setup.h \
     snsclient.h
