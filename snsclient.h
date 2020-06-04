@@ -8,6 +8,10 @@
 #include <aws/sns/model/ListTopicsRequest.h>
 #include <aws/sns/model/ListTopicsResult.h>
 #include <stdexcept>
+#include <aws/sns/model/SubscribeRequest.h>
+#include <aws/sns/model/SubscribeResult.h>
+#include <aws/sns/model/CreatePlatformEndpointRequest.h>
+
 //#include <string>
 //#include <iostream>
 
@@ -19,7 +23,10 @@ public:
         //do nothing
     };
     ~SnsClient();
+    void setArn(Aws::String arn);
     void checkConnection();
+private:
+    Aws::String TopicArn;
 };
 
 #endif // SNSCLIENT_H

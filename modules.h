@@ -2,6 +2,33 @@
 #define MODULES_H
 
 #include <QObject>
+#include "snsclient.h"
+#include "dynamoclient.h"
+#include "lambdaclient.h"
+#include <QFileInfo>
+#include <QQmlApplicationEngine>
+#include <QGuiApplication>
+#include <iostream>
+#include <QDebug>
+#include <QQmlContext>
+#include <QDir>
+#include <QProcess>
+#include "linkedlist.h"
+#include "utilityfunctions.h"
+#include <QVariant>
+#include "sqsclient.h"
+#include <QCoreApplication>
+#include <QFuture>
+#include <QFutureWatcher>
+#include <QList>
+#include <QtConcurrent>
+#include <QDateTime>
+#include <QTimer>
+struct userCredentials {
+    Aws::String client_sqs;
+    Aws::String classmoorId;
+    Aws::String studentId;
+};
 
 class Modules : public QObject
 {
@@ -9,7 +36,34 @@ class Modules : public QObject
 public:
     explicit Modules(QObject *parent = nullptr);
 
+    void runIntialization();
+private:
+    QFutureWatcher<void> watcher;
+    QFuture<void> future;
+    DynamoClient* dynamo_client;
+    UtilityFunctions util;
+    lambdaClient* lambda_client;
+    userCredentials creds;
+    void intalizeState();
+    intitalizeClassroomPayload intialLoad;
+    bool readFromFile();
+    SqsClient* sqs_client;
+    void runMessageUpdates();
+    void startPolling( );
+    void activateTimer();
+    int timeInSeconds = 0;
+    QTimer* activeTimer;
 signals:
+    void changeState(QVariant stateSetting, QVariant classCheck_message, QVariant classTime_message, int timeInSec);
+    void newMessage(QString m);
+    void updateTimer(int timeInSec);
+public slots:
+    void intialize();
+    void updateTime();
+//    void joinClasstime();
+    void recievedMessage(QString m);
+    void handleCheckin();
+
 
 };
 

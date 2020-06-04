@@ -3,6 +3,7 @@ import QtQuick.Controls 2.5
 import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.3
 import com.classmoor.setup 1.0
+import com.classmoor.classmoor 1.0
 
 Page {
     id: page
@@ -16,6 +17,10 @@ Page {
 
     Setup {
         id: setup
+    }
+
+    Classmoor {
+        id: classmoor
     }
 
     property bool isFilledOut: true
@@ -32,6 +37,9 @@ Page {
         onResults: {
             isDone = done
             isFound = found
+            if (isDone && isFound) {
+                setup.restartApplication();
+            }
         }
     }
 
@@ -93,14 +101,15 @@ Page {
             width: 100
             height: 100
 
-            Text {
-                id: nameHeader
-                color: "#443f3f"
-                text: qsTr("Name (Full Name)")
+            Label {
+                id: label
+                color: "#3d4042"
+                text: qsTr("Full Name")
+                font.letterSpacing: 2
                 font.weight: Font.Medium
                 font.bold: false
+                font.pointSize: 18
                 font.family: "Lato"
-                font.pixelSize: 25
             }
 
             TextField {
@@ -122,6 +131,7 @@ Page {
                 placeholderText: qsTr("i.e Luke Skywalker")
                 font.pointSize: 15
             }
+
         }
 
         ColumnLayout {
@@ -129,14 +139,15 @@ Page {
             width: 100
             height: 100
 
-            Text {
-                id: classCodeHeader
-                color: "#443f3f"
+            Label {
+                id: label1
+                color: "#3d4042"
                 text: qsTr("Class Code")
-                font.family: "Lato"
-                font.pixelSize: 25
+                font.letterSpacing: 2
                 font.weight: Font.Medium
                 font.bold: false
+                font.family: "Lato"
+                font.pointSize: 18
             }
 
             TextField {
@@ -158,6 +169,7 @@ Page {
                 placeholderText: qsTr("i.e CS8A")
                 font.pointSize: 15
             }
+
         }
 
         Button {
@@ -184,8 +196,6 @@ Page {
             }
 
             background: Rectangle {
-//                implicitWidth: parent.width
-//                implicitHeight: parent.height
                 color: joinClassroomButton.down ? "#4d94ff" : "#2F6BA7"
                 radius: 6
             }
@@ -196,6 +206,8 @@ Page {
                                                nameField.text)
             }
         }
+
+
     }
 
     states: [

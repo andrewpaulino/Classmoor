@@ -13,22 +13,23 @@
 #include "setup.h"
 
 
-class classmoor : public QObject
+class Classmoor : public QObject
 {
     Q_OBJECT
 
 public:
-    classmoor();
-    classmoor(QObject *parent) : QObject(parent) {}
-    classmoor(QQmlApplicationEngine* e);
+    Classmoor(){};
+    Classmoor(QObject *parent) : QObject(parent) {}
+    Classmoor(QQmlApplicationEngine* e);
     void intiateSetup();
     QQmlApplicationEngine getEngine();
-private:
     bool isFirstTimeRunning();
+private:
     QQmlApplicationEngine* engine;
 signals:
 
 public slots:
+    void checkIfSetupIsCompleted(bool check);
 };
 
 #endif // CLASSMOOR_H

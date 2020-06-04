@@ -7,16 +7,17 @@ Setup::Setup(QObject *parent) : QObject(parent)
     lambda_client = new lambdaClient(clientConfig);
 }
 
-bool Setup::writeToFile(const QString &data)
+bool Setup::writeToFile(joinClassroomPayload v)
 {
 
     QString filename = "user_data.txt";
     QFile file(filename);
     if (file.open(QIODevice::ReadWrite)) {
         QTextStream stream(&file);
-        stream << data << endl;
+        stream << util.convertStdStringToQString(v.studentId) << endl << util.convertStdStringToQString(v.classroomId) << endl << util.convertStdStringToQString(v.classQueueUrl);
         return true;
     }
+    return false;
 }
 
 
@@ -35,25 +36,25 @@ void Setup::joinClassroom(QString code, QString name)
        bool isDone = false;
 
        try {
-           isDone = lambda_client->joinClassroom(awsName, awsCode);
-           result = QString::fromStdString(lambda_client->getLastFunctionResult());
+           joinClassroomPayload res = lambda_client->joinClassroom(awsName, awsCode);
+           if (isDone && res.statusCode == 404) {
+               emit results(false, true);
+           } else {
+               bool isDoneWritting = false;
+               isDoneWritting = writeToFile(res);
+
+               if (isDoneWritting) {
+                    emit results(true, true);
+
+                    emit doneWithSetup(true);
+               }
+
+           }
+
        } catch (std::runtime_error e) {
             std::cout << e.what() << std::endl;
        }
 
-       if(isDone && lambda_client->getLastFunctionResult() == "404") {
-
-           emit results(false, true);
-       } else {
-           bool isDoneWritting = false;
-           isDoneWritting = writeToFile(result);
-           qDebug() << isDoneWritting;
-           if (isDoneWritting) {
-                emit results(true, true);
-                emit doneWithSetup(true);
-           }
-
-       }
 
 
   } else {
@@ -61,4 +62,10 @@ void Setup::joinClassroom(QString code, QString name)
   }
 
 
+}
+
+void Setup::restartApplication()
+{
+    qApp->quit();
+    QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
 }

@@ -20,3 +20,8 @@ void SnsClient::checkConnection() {
 SnsClient::~SnsClient() {
 
 }
+
+void SnsClient::setArn(Aws::String arn)
+{
+    TopicArn = arn;
+}

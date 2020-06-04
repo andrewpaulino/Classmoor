@@ -12,6 +12,9 @@
 #include <QDebug>
 #include <QQmlContext>
 #include <QDir>
+#include <QProcess>
+#include "utilityfunctions.h"
+
 class Setup : public QObject
 {
     Q_OBJECT
@@ -23,8 +26,9 @@ private:
     lambdaClient* lambda_client;
     bool isButtonDisabled = true;
     QString _name;
+    UtilityFunctions util;
     QString _classCode;
-    bool writeToFile(const QString& data);
+    bool writeToFile(joinClassroomPayload v);
 signals:
     bool filledOut(bool isValid);
     void results(bool found, bool done);
@@ -32,6 +36,7 @@ signals:
 
 public slots:
     void joinClassroom(QString code, QString name);
+    void restartApplication();
 
 };
 

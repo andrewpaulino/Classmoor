@@ -1,11 +1,17 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>HomeForm.ui.qml</file>
+        <file>ModulesForm.ui.qml</file>
         <file>qtquickcontrols2.conf</file>
-        <file>undraw_teaching_f1cm.svg</file>
         <file>setupView.qml</file>
         <file>Setup.qml</file>
         <file>SetupForm.ui.qml</file>
+        <file>time.svg</file>
+        <file>classtimereal.svg</file>
+        <file>../Downloads/cal.svg</file>
+        <file>cal.svg</file>
+        <file>ClasstimeUI.ui.qml</file>
+        <file>Modules.qml</file>
+        <file>ClasstimeInterface.qml</file>
     </qresource>
 </RCC>

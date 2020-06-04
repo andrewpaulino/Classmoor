@@ -13,19 +13,30 @@
 #include <fstream>
 #include <QDebug>
 #include <QString>
+#include "utilityfunctions.h"
+
+
 
 class lambdaClient : public Aws::Lambda::LambdaClient {
 public:
     lambdaClient();
     lambdaClient(Aws::Client::ClientConfiguration config) : Aws::Lambda::LambdaClient(config) {
     };
-    bool joinClassroom(Aws::String name, Aws::String code);
+    joinClassroomPayload joinClassroom(Aws::String name, Aws::String code);
+    intitalizeClassroomPayload intializeUser(Aws::String studentId, Aws::String classmoorId);
+    classCheckPayload checkInStudent(Aws::String student_id, Aws::String classroom_id);
     bool checkConnection();
     std::string getLastFunctionResult();
 private:
     std::string lastFunctionResult;
+    UtilityFunctions util;
 
-//   std::shared_ptr<Aws::Lambda::LambdaClient> m_client;
+    //Debug Functions
+    void printPayload(normalPayload v);
+    void printIntitalizeClassroomPayload(intitalizeClassroomPayload v);
+    void printJoinClassroomPayload(joinClassroomPayload v);
+    void printClassCheckPayload(classCheckPayload v);
+
 };
 
 #endif // LAMBDACLIENT_H

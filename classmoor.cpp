@@ -1,6 +1,6 @@
 #include "classmoor.h"
 
-classmoor::classmoor(QQmlApplicationEngine* e) {
+Classmoor::Classmoor(QQmlApplicationEngine* e) {
 
     engine = e;
 
@@ -21,19 +21,15 @@ classmoor::classmoor(QQmlApplicationEngine* e) {
 
 
             dynamoClient.checkConnection();
+
             bool isLambdaGood = false;
             isLambdaGood = lambda.checkConnection();
 
             qDebug() << isFirstTimeRunning();
             if (isFirstTimeRunning()) {
-
-//                do {
-                    qmlRegisterType<Setup>("com.classmoor.setup", 1, 0, "Setup");
-                    engine->load(QStringLiteral("qrc:/Setup.qml"));
-//                } while (isFirstTimeRunning());
-
-//                engine->quit();
-
+                qmlRegisterType<Setup>("com.classmoor.setup", 1, 0, "Setup");
+                qmlRegisterType<Classmoor>("com.classmoor.classmoor", 1, 0, "Classmoor");
+                engine->load(QStringLiteral("qrc:/Setup.qml"));
 
             } else {
                 engine->load(QStringLiteral("qrc:/main.qml"));
@@ -45,7 +41,7 @@ classmoor::classmoor(QQmlApplicationEngine* e) {
 }
 
 
-bool classmoor::isFirstTimeRunning() {
+bool Classmoor::isFirstTimeRunning() {
 
 
     QString pathToUserDataFile = "user_data.txt";
@@ -57,7 +53,14 @@ bool classmoor::isFirstTimeRunning() {
 
 }
 
-void classmoor::intiateSetup() {
+void Classmoor::checkIfSetupIsCompleted(bool check)
+{
+    if (check) {
+        engine->load(QStringLiteral("qrc:/main.qml"));
+    }
+}
+
+void Classmoor::intiateSetup() {
 
 }
 
