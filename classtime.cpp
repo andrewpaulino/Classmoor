@@ -18,7 +18,6 @@ void Classtime::retrieveClasstimeDetails()
 
     try {
         readFromFile();
-        // Step 1: Retrieve the details for classtime
         intialLoad = lambda_client->getClasstimeDetails(creds);
         qint64 d = QDateTime::currentSecsSinceEpoch();
         timeInSeconds = d - intialLoad.timeElapsed;
@@ -28,7 +27,7 @@ void Classtime::retrieveClasstimeDetails()
         emit updateComponents( util.convertStdStringToQString(intialLoad.classtimeLessonHeader), util.convertStdStringToQString(intialLoad.classtimeLessonResource), intialLoad.numOfParticipants );
 
         connect(&(*sqs_client), &SqsClient::newMessage, this, &Classtime::recievedMessage, Qt::QueuedConnection);
-        sqs_client->startPolling(creds.client_sqs);
+        sqs_client->startPolling( util.convertStdStringToAWSString( intialLoad.classtimeSQSUrl));
     } catch (std::exception e) {
         std::cout << e.what() << std::endl;
     }
@@ -46,7 +45,7 @@ void Classtime::leaveClasstime()
 {
     try {
         bool result = false;
-        result = lambda_client->leaveClasstime( creds.studentId, util.convertStdStringToAWSString( intialLoad.classtimeId ), creds.client_sqs);
+        result = lambda_client->leaveClasstime( creds.studentId, util.convertStdStringToAWSString( intialLoad.classtimeId ), creds.classroomId );
         if (result) {
 
         }
@@ -57,7 +56,7 @@ void Classtime::leaveClasstime()
 
 void Classtime::recievedMessage(QString m)
 {
-    qDebug() << "Recieved Message: " << m << endl;
+    qDebug() << "Recieved Message IN Classtime Polling: " << m << endl;
     if (m == "updateClasstime") {
         // Create new thread to handle this as it will timeout before finished as the polling will the
 
@@ -87,7 +86,7 @@ void Classtime::recievedMessage(QString m)
 }
 
 clastimeUpdatePayload Classtime::runUpdateThreadedFunction( Aws::String classtimeId, Aws::String classroomId ) {
-      qDebug() << "In Update Classtime" << QThread::currentThread();
+    qDebug() << "In Update Classtime" << QThread::currentThread();
     return lambda_client->updateClasstime( classtimeId, classroomId );
 }
 
@@ -118,6 +117,11 @@ bool Classtime::readFromFile()
         return false;
     }
 
+}
+
+Classtime::~Classtime()
+{
+    sqs_client->closePolling();
 }
 
 

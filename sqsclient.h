@@ -45,11 +45,12 @@ public:
     };
     ~SqsClient();
     void closePolling();
-    void start();
+    bool start();
     void sendMessage(Aws::String url,Aws::String message);
     void purgeQueue(Aws::String url);
 private:
-    QFuture<void> future;
+    QFuture<bool> future;
+    QFutureWatcher<bool> watcher;
     UtilityFunctions util;
     Aws::String sqsUrl;
     bool closeThread = false;

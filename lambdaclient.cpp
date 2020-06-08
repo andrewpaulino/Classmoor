@@ -329,7 +329,7 @@ clastimeUpdatePayload lambdaClient::updateClasstime(Aws::String classtimeId, Aws
     }
 }
 
-bool lambdaClient::leaveClasstime(Aws::String studentId, Aws::String classtimeId, Aws::String sqsUrl)
+bool lambdaClient::leaveClasstime(Aws::String studentId, Aws::String classtimeId, Aws::String classroomId)
 {
     Aws::String functionName = "classmoor-api-prod";
 
@@ -344,7 +344,7 @@ bool lambdaClient::leaveClasstime(Aws::String studentId, Aws::String classtimeId
     bodyObject.WithString("clientPath", "leaveClasstime");
     bodyObject.WithString("studentId", studentId);
     bodyObject.WithString("classtimeId", classtimeId);
-    bodyObject.WithString("mainSQSUrl", sqsUrl);
+    bodyObject.WithString("classroomId", classroomId);
 
     Aws::Utils::Json::JsonValue jsonPayload;
     jsonPayload.WithObject("body", bodyObject);

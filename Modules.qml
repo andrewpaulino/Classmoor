@@ -99,6 +99,13 @@ Item {
                 modulesForm.isStateTwo = false
                 modulesForm.isStateThree = false
                 break;
+            case 5:
+                modulesForm.isDoneLoading = false;
+                modulesForm.isStateFour = false;
+                modulesForm.isStateOne = false;
+                modulesForm.isStateTwo = false
+                modulesForm.isStateThree = false
+                break;
             default:
 
                 modulesForm.isDoneLoading = false;

@@ -15,8 +15,8 @@ Modules::Modules(QObject *parent) : QObject(parent) {
 
 Modules::~Modules()
 {
-    qDebug() << "Deleting Threads" << endl;
-    delete sqs_client;
+    qDebug() << "Closing Modules" << endl;
+   sqs_client->closePolling();
 }
 
 
@@ -79,7 +79,11 @@ void Modules::intalizeState()
 
 }
 
-
+void Modules::joinClasstime(){
+     // Closing poll
+     emit changeState(5, "N/A", "N/A", 0);
+     sqs_client->closePolling();
+}
 void Modules::activateTimer()
 {
     activeTimer = new QTimer(this);
@@ -89,11 +93,14 @@ void Modules::activateTimer()
 }
 
 
+
 bool Modules::readFromFile()
 {
     try {
         LinkedList<QString> list;
         QFile inputFile("user_data.txt");
+        QFileInfo fi("user_data.txt");
+        qDebug() << fi.path() << endl;
         if (inputFile.open(QIODevice::ReadOnly))
         {
             QTextStream in(&inputFile);
@@ -132,12 +139,18 @@ void Modules::intialize()
     runIntialization();
 }
 
-void Modules::joinClasstime()
-{
+//void Modules::joinClasstime()
+//{
 
-    sqs_client->closePolling();
-    //    delete sqs_client;
-}
+//    //Create new thread to wait for closing
+//    future = QtConcurrent::run(this, &Modules::waitForClosingPollOnThread);
+
+//    watcher.setFuture(future);
+
+//    watcher.waitForFinished();
+
+//    //    delete sqs_client;
+//}
 
 void Modules::updateTime()
 {
@@ -149,7 +162,7 @@ void Modules::updateTime()
 
 void Modules::recievedMessage(QString m)
 {
-    qDebug() << "Recieved Message: " << m << endl;
+    qDebug() << "Recieved Message IN Modules Polling:" << m << endl;
     if (m == "newClasstime" && intialLoad.isCheckedIn) {
         emit changeState(1, util.convertStdStringToQString(intialLoad.lastCheckin),  util.convertStdStringToQString(intialLoad.lastClasstime), 32323);
     } else if (m == "newClasstime" && !intialLoad.isCheckedIn) {
@@ -176,4 +189,3 @@ void Modules::handleCheckin()
     }
 
 }
-

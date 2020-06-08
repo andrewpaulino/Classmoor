@@ -46,6 +46,7 @@ private:
     void startPolling( );
     void activateTimer();
     int timeInSeconds = 0;
+    void waitForClosingPollOnThread();
     QTimer* activeTimer;
 signals:
     void changeState(QVariant stateSetting, QVariant classCheck_message, QVariant classTime_message, int timeInSec);
