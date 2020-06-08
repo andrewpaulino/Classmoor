@@ -47,7 +47,7 @@ void Classtime::leaveClasstime()
         bool result = false;
         result = lambda_client->leaveClasstime( creds.studentId, util.convertStdStringToAWSString( intialLoad.classtimeId ), creds.classroomId, util.convertStdStringToAWSString(intialLoad.classtimeSQSUrl));
         if (result) {
-            sqs_client->closePolling();
+//            sqs_client->closePolling();
         }
     } catch (std::exception e) {
         qDebug() << e.what() << endl;
@@ -68,10 +68,10 @@ void Classtime::recievedMessage(QString m)
         QFutureWatcher<clastimeUpdatePayload> watcher;
 
         QFuture<clastimeUpdatePayload> future = QtConcurrent::run(this, &Classtime::runUpdateThreadedFunction, classtime_id, classroom_id);
-
         watcher.setFuture(future);
-
         watcher.waitForFinished();
+
+
         intialLoad.numOfParticipants = future.result().numOfParticipants;
         intialLoad.classtimeLessonHeader = future.result().classtimeLessonHeader;
         intialLoad.classtimeLessonResource = future.result().classtimeLessonResource;

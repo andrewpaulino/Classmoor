@@ -81,7 +81,7 @@ void Modules::intalizeState()
 
 void Modules::joinClasstime(){
      // Closing poll
-    sqs_client->closePolling();
+//    sqs_client->closePolling();
 //     emit changeState(5, "N/A", "N/A", 0);
 //     sqs_client->closePolling();
 }
