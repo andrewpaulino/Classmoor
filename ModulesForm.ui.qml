@@ -318,7 +318,7 @@ Page {
                     contentItem: Text {
                         font.bold: true
                         font.family: "Lato"
-                        font.pointSize: 11
+                        font.pointSize: 16
                         font.weight: Font.Medium
                         opacity: enabled ? 1.0 : 0.3
                         color: joinClasstimeButton.down ? "#e6f0ff" : "white"
@@ -521,7 +521,7 @@ Page {
                         width: 190
                         fillMode: Image.PreserveAspectFit
                         sourceSize.width: 204
-                        source: "cal.svg"
+                        source: "./cal.svg"
                         sourceSize.height: 150
                     }
                 }
@@ -543,7 +543,7 @@ Page {
                         font.family: "Lato"
                         verticalAlignment: Text.AlignVCenter
                         font.weight: Font.Medium
-                        font.pointSize: 11
+                        font.pointSize: 16
                     }
                     padding: 14
                     Layout.fillHeight: false
@@ -681,7 +681,17 @@ Page {
 
             PropertyChanges {
                 target: rowLayout7
-                spacing: 110
+                spacing: 130
+            }
+
+            PropertyChanges {
+                target: columnLayout5
+                Layout.alignment: Qt.AlignRight | Qt.AlignBottom
+            }
+
+            PropertyChanges {
+                target: element10
+                font.pointSize: 16
             }
         },
         State {
@@ -840,6 +850,7 @@ Page {
                 target: time
                 color: "#7131bf"
                 text: qsTr("00:00:00")
+                Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                 font.family: "Lato"
                 bottomPadding: 0
                 Layout.bottomMargin: 0
@@ -868,6 +879,12 @@ Page {
             PropertyChanges {
                 target: joinClasstimeButton
                 enabled: true
+            }
+
+            PropertyChanges {
+                target: columnLayout5
+                Layout.fillWidth: false
+                Layout.alignment: Qt.AlignRight | Qt.AlignBottom
             }
         }
     ]

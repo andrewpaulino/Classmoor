@@ -8,8 +8,9 @@ SqsClient::SqsClient(QObject *parent) : QObject(parent)
 void SqsClient::startPolling(Aws::String queueUrl)
 {
     sqsUrl = queueUrl;
-    future = QtConcurrent::run(this, &SqsClient::start);
 
+    future = QtConcurrent::run(this, &SqsClient::start);
+    watcher.setFuture(future);
 }
 
 SqsClient::~SqsClient()
@@ -20,16 +21,17 @@ SqsClient::~SqsClient()
 
 void SqsClient::closePolling()
 {
+    qDebug() << "Closing POLLS" << endl;
     closeThread = true;
     if(future.isRunning()) {
-        qDebug() << "Clean Exit";
-        future.waitForFinished();
+        qDebug() << "STILLL RUNNING IN ˇHREAD";
     }
-    qDebug() << future.isFinished() << endl;
+    watcher.waitForFinished();
+    qDebug() << "Is Thread Still Running? " << future.isFinished() << endl;
 }
 
 
-void SqsClient::start() {
+bool SqsClient::start() {
     Aws::String queue_url = sqsUrl;
     Aws::SQS::Model::ReceiveMessageRequest rm_req;
     Aws::SQS::Model::SetQueueAttributesRequest request;
@@ -37,7 +39,7 @@ void SqsClient::start() {
     rm_req.SetMaxNumberOfMessages(1);
     request.SetQueueUrl(queue_url);
     Aws::String poll_time = "400";
-    request.AddAttributes(Aws::SQS::Model::QueueAttributeName::ReceiveMessageWaitTimeSeconds, "10");
+    request.AddAttributes(Aws::SQS::Model::QueueAttributeName::ReceiveMessageWaitTimeSeconds, "5");
     auto outcome = SetQueueAttributes(request);
     if (outcome.IsSuccess())
     {
@@ -61,7 +63,7 @@ void SqsClient::start() {
         {
             std::cout << "Error receiving message from queue " << queue_url << ": "
                       << rm_out.GetError().GetMessage() << std::endl;
-            return;
+            return false;
         }
 
 
@@ -74,8 +76,7 @@ void SqsClient::start() {
         if (messages.size() == 0)
         {
 
-            std::cout << "No messages received from queue " << queue_url <<
-                         std::endl;
+        //Do nothing for now
         } else {
             const auto& message = messages[0];
 
@@ -85,7 +86,7 @@ void SqsClient::start() {
 
             Aws::Utils::Json::JsonValue bodyObject(message.GetBody());
             std::cout << util.convertAWSStringToStdString(bodyObject.View().GetString("Message")) << std::endl;
-            qDebug() << "HERE:" << util.convertStdStringToQString( util.convertAWSStringToStdString(bodyObject.View().GetString("Message")));
+            qDebug() << "Incoming Message:" << util.convertStdStringToQString( util.convertAWSStringToStdString(bodyObject.View().GetString("Message")));
             emit newMessage( util.convertStdStringToQString( util.convertAWSStringToStdString(bodyObject.View().GetString("Message"))));
 
             Aws::SQS::Model::DeleteMessageRequest dm_req;
@@ -95,9 +96,8 @@ void SqsClient::start() {
             auto dm_out = DeleteMessage(dm_req);
             if (dm_out.IsSuccess())
             {
-                std::cout << "Successfully deleted message " << message.GetMessageId()
-                          << " from queue " << queue_url << std::endl;
-            }
+               qDebug() << "Message Deleted" << endl;
+             }
             else
             {
                 std::cout << "Error deleting message " << message.GetMessageId() <<
@@ -110,7 +110,7 @@ void SqsClient::start() {
 
     } while (closeThread == false);
 
-    return;
+    return true;
 
 
 }

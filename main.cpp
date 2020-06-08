@@ -7,7 +7,7 @@
 #include "modules.h"
 #include "classtime.h"
 #include <QtWebView/QtWebView>
-
+#include <QDebug>
 #include <QtCore/QUrl>
 #include <QtCore/QCommandLineOption>
 #include <QtCore/QCommandLineParser>
@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
         qmlRegisterType<Classmoor>("com.classmoor.classmoor", 1, 0, "Classmoor");
         qmlRegisterType<Modules>("com.classmoor.modules", 1, 0, "Modules");
         qmlRegisterType<Classtime>("com.classmoor.classtime", 1, 0, "Classtime");
+
 
         if (mainExecutive.isFirstTimeRunning()) {
             url = (QStringLiteral("qrc:/Setup.qml"));

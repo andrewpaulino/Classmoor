@@ -57,7 +57,7 @@ void Classtime::leaveClasstime()
 
 void Classtime::recievedMessage(QString m)
 {
-    qDebug() << "Recieved Message: " << m << endl;
+    qDebug() << "Recieved Message IN Classtime Polling: " << m << endl;
     if (m == "updateClasstime") {
         // Create new thread to handle this as it will timeout before finished as the polling will the
 
@@ -87,7 +87,7 @@ void Classtime::recievedMessage(QString m)
 }
 
 clastimeUpdatePayload Classtime::runUpdateThreadedFunction( Aws::String classtimeId, Aws::String classroomId ) {
-      qDebug() << "In Update Classtime" << QThread::currentThread();
+    qDebug() << "In Update Classtime" << QThread::currentThread();
     return lambda_client->updateClasstime( classtimeId, classroomId );
 }
 
@@ -118,6 +118,11 @@ bool Classtime::readFromFile()
         return false;
     }
 
+}
+
+Classtime::~Classtime()
+{
+    sqs_client->closePolling();
 }
 
 

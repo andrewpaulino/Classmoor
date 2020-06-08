@@ -4,6 +4,7 @@ import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.3
 import com.classmoor.setup 1.0
 import com.classmoor.classmoor 1.0
+import Qt.labs.calendar 1.0
 
 Page {
     id: page

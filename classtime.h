@@ -28,7 +28,7 @@ class Classtime : public QObject
     Q_OBJECT
 public:
     explicit Classtime(QObject *parent = nullptr);
-
+    ~Classtime();
 private:
     DynamoClient* dynamo_client;
     UtilityFunctions util;
@@ -41,6 +41,7 @@ private:
     void activateTimer();
     int timeInSeconds = 0;
     QTimer* activeTimer;
+
     clastimeUpdatePayload runUpdateThreadedFunction(Aws::String classtimeId, Aws::String classroomId );
 signals:
     void updateComponents(QString lessonHeader, QString lessonResource, int numOfParticipants);
