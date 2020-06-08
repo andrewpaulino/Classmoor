@@ -52,6 +52,46 @@ Page {
             running: true
         }
     }
+
+    RowLayout {
+        id: rowLayout101asd
+        height: 100
+        anchors.top: parent.top
+        anchors.topMargin: 30
+        anchors.right: parent.right
+        anchors.rightMargin: 30
+        anchors.left: parent.left
+        anchors.leftMargin: 30
+        Layout.leftMargin: 30
+
+        spacing: 10
+
+        RowLayout {
+            id: subLayout01dd
+            spacing: 0
+            Text {
+                id: element10dd
+                width: 169
+                height: 85
+                text: qsTr("Class")
+                font.bold: true
+                font.family: "Lato"
+                font.pixelSize: 50
+            }
+            Text {
+                id: element301dsad
+                width: 169
+                height: 85
+                color: "#2f6ba7"
+                text: qsTr("moor")
+                font.bold: true
+                font.family: "Lato"
+                font.pixelSize: 50
+            }
+        }
+
+    }
+
     ColumnLayout {
         id: columnLayout4
         x: 512
@@ -594,7 +634,7 @@ Page {
         },
         State {
             name: "state3"
-            when: isDoneLoading === false && isStateThree === true
+            when: isDoneLoading === true && isStateThree === true
             PropertyChanges {
                 target: element11
                 visible: false
@@ -602,7 +642,7 @@ Page {
 
             PropertyChanges {
                 target: joinClasstimeButton
-                visible: false
+                visible: true
             }
 
             PropertyChanges {
@@ -680,8 +720,8 @@ Page {
 
             PropertyChanges {
                 target: joinClasstimeButton
-                visible: false
-                enabled: true
+                visible: true
+                enabled: false
             }
 
             PropertyChanges {
@@ -835,14 +875,13 @@ Page {
 
 /*##^##
 Designer {
-    D{i:0;customId:"";formeditorZoom:0.75}D{i:6;invisible:true}D{i:7;invisible:true}D{i:5;invisible:true}
-D{i:27;invisible:true}D{i:28;anchors_height:300;anchors_width:350;anchors_x:355;anchors_y:0;invisible:true}
-D{i:26;anchors_height:300;anchors_width:350;anchors_x:355;anchors_y:0;invisible:true}
+    D{i:0;customId:"";formeditorZoom:0.75}D{i:7;invisible:true}D{i:8;anchors_height:298;anchors_width:407;anchors_x:8;anchors_y:8}
+D{i:6;invisible:true}D{i:5;anchors_width:400;invisible:true}D{i:26;anchors_height:300;anchors_width:350;anchors_x:355;anchors_y:0;invisible:true}
+D{i:28;anchors_height:300;anchors_width:350;anchors_x:355;anchors_y:0;invisible:true}
 D{i:29;anchors_height:300;anchors_width:350;anchors_x:355;anchors_y:0;invisible:true}
-D{i:48;anchors_height:100;anchors_width:100}D{i:50;anchors_height:100;anchors_width:100}
-D{i:52;anchors_height:100;anchors_width:100}D{i:49;anchors_height:100;anchors_width:100}
-D{i:31;anchors_height:300;anchors_width:350;anchors_x:355;anchors_y:0;invisible:true}
-D{i:30;invisible:true}D{i:8;anchors_height:298;anchors_width:407;anchors_x:8;anchors_y:8}
+D{i:27;invisible:true}D{i:31;anchors_height:300;anchors_width:350;anchors_x:355;anchors_y:0;invisible:true}
+D{i:48;anchors_height:100;anchors_width:100}D{i:49;anchors_height:100;anchors_width:100}
+D{i:52;anchors_height:100;anchors_width:100}D{i:50;anchors_height:100;anchors_width:100}
 }
 ##^##*/
 

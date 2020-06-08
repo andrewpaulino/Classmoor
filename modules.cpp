@@ -13,41 +13,52 @@ Modules::Modules(QObject *parent) : QObject(parent) {
 
 }
 
+Modules::~Modules()
+{
+    qDebug() << "Deleting Threads" << endl;
+    delete sqs_client;
+}
+
 
 void Modules::runIntialization()
 {
+    // Check If we can connect to classmoor services...
+    if (lambda_client->checkConnection()) {
 
-    //PreReq: Check Connections
-    //LAMBDA:
-    lambda_client->checkConnection();
-    //Step 1: Read from user data file;
-    readFromFile();
+        try {
+            // Read UserData, and save it to the class credentials.
+            readFromFile();
 
-    //Step 3: Subscribe to SNS Topic
+            // Retrieve user information, and save it to the class.
+            intialLoad = lambda_client->intializeUser(creds.studentId, creds.classroomId);
 
-    //Step 2: Pass that to lambda intializeUser;
-    try {
-        intialLoad = lambda_client->intializeUser(creds.studentId, creds.classmoorId);
-        timeInSeconds = intialLoad.timeRemaining;
-    } catch (std::exception e) {
-        std::cout << e.what() << std::endl;
+            // Purge the Queue, so when application starts over; we will recieve new updates.
+            sqs_client->purgeQueue(  creds.client_sqs );
+
+            // Convert time for timer
+            timeInSeconds = intialLoad.timeRemaining;
+
+            // Activate timer and start countdown for checkin feature
+            activateTimer();
+
+            // Intialize States and views
+            intalizeState();
+
+            // Connect Signal and slots of application to each other.
+            connect(&(*sqs_client), &SqsClient::newMessage, this, &Modules::recievedMessage, Qt::QueuedConnection);
+
+            //Start polling to the classmoor Class SNS and then run on seperate thread.
+            sqs_client->startPolling(creds.client_sqs);
+        } catch (std::exception e) {
+            std::cout << e.what() << std::endl;
+        }
     }
 
-     activateTimer();
-    //Step 2a: Configure States and possible variations
-    intalizeState();
-    //Step 3: Open a thread to QT to run polling
-//    connect(this, &Modules::newMessage, this, &Modules::recievedMessage, Qt::QueuedConnection);
-//    Aws::String msg;
-    QFuture<void> future = QtConcurrent::run(this, &Modules::startPolling);
+
 
 
 
 }
-
-//void Modules::handleFinish() {
-
-//}
 
 void Modules::intalizeState()
 {
@@ -68,88 +79,6 @@ void Modules::intalizeState()
 
 }
 
-void Modules::startPolling() {
-    Aws::String queue_url = creds.client_sqs;
-    Aws::SQS::Model::ReceiveMessageRequest rm_req;
-    Aws::SQS::Model::SetQueueAttributesRequest request;
-    rm_req.SetQueueUrl( queue_url );
-    rm_req.SetMaxNumberOfMessages(1);
-    request.SetQueueUrl(queue_url);
-    Aws::String poll_time = "400";
-    request.AddAttributes(Aws::SQS::Model::QueueAttributeName::ReceiveMessageWaitTimeSeconds, "20");
-    auto outcome = sqs_client->SetQueueAttributes(request);
-    if (outcome.IsSuccess())
-    {
-        std::cout << "Successfully updated long polling time for queue " <<
-                     queue_url << " to " << poll_time << std::endl;
-    }
-    else
-    {
-        std::cout << "Error updating long polling time for queue " <<
-                     queue_url << ": " << outcome.GetError().GetMessage() <<
-                     std::endl;
-    }
-
-
-    do {
-        qDebug() << "Starting Poll For Messages" << endl;
-        auto rm_out = sqs_client->ReceiveMessage(rm_req);
-        if (!rm_out.IsSuccess())
-        {
-            std::cout << "Error receiving message from queue " << queue_url << ": "
-                      << rm_out.GetError().GetMessage() << std::endl;
-            return;
-        }
-
-
-        qDebug() << "Repolling" << endl;
-        const auto& messages = rm_out.GetResult().GetMessages();
-        if (messages.size() == 0)
-        {
-
-            std::cout << "No messages received from queue " << queue_url <<
-                         std::endl;
-
-
-        } else {
-            const auto& message = messages[0];
-            Aws::String d = message.GetMessageId();
-
-            Aws::String a = message.GetBody();
-            std::cout << d << " " << a << std::endl;
-            if (a == "newClasstime") {
-                emit newMessage( util.convertStdStringToQString( util.convertAWSStringToStdString( a)));
-            }
-            Aws::SQS::Model::DeleteMessageRequest dm_req;
-            dm_req.SetQueueUrl(queue_url);
-            dm_req.SetReceiptHandle(message.GetReceiptHandle());
-
-            auto dm_out = sqs_client->DeleteMessage(dm_req);
-            if (dm_out.IsSuccess())
-            {
-                std::cout << "Successfully deleted message " << message.GetMessageId()
-                          << " from queue " << queue_url << std::endl;
-            }
-            else
-            {
-                std::cout << "Error deleting message " << message.GetMessageId() <<
-                             " from queue " << queue_url << ": " <<
-                             dm_out.GetError().GetMessage() << std::endl;
-            }
-        }
-
-
-
-    } while (true);
-
-
-
-
-
-
-
-
-}
 
 void Modules::activateTimer()
 {
@@ -175,8 +104,9 @@ bool Modules::readFromFile()
             inputFile.close();
         }
 
-        creds.classmoorId = util.convertQStringToAWSString( list[2]);
+        creds.classroomId = util.convertQStringToAWSString( list[2]);
         creds.client_sqs = util.convertQStringToAWSString(list[3]);
+        creds.confirmation_client_sqs = util.convertQStringToAWSString(list[4]);
         creds.studentId = util.convertQStringToAWSString(list[1]);
 
         return true;
@@ -190,7 +120,7 @@ bool Modules::readFromFile()
 void Modules::runMessageUpdates()
 {
     try {
-        intialLoad = lambda_client->intializeUser(creds.studentId, creds.classmoorId);
+        intialLoad = lambda_client->intializeUser(creds.studentId, creds.classroomId);
     } catch (std::exception e) {
         std::cout << e.what() << std::endl;
     }
@@ -200,6 +130,13 @@ void Modules::runMessageUpdates()
 void Modules::intialize()
 {
     runIntialization();
+}
+
+void Modules::joinClasstime()
+{
+
+    sqs_client->closePolling();
+    //    delete sqs_client;
 }
 
 void Modules::updateTime()
@@ -212,8 +149,11 @@ void Modules::updateTime()
 
 void Modules::recievedMessage(QString m)
 {
+    qDebug() << "Recieved Message: " << m << endl;
     if (m == "newClasstime" && intialLoad.isCheckedIn) {
         emit changeState(1, util.convertStdStringToQString(intialLoad.lastCheckin),  util.convertStdStringToQString(intialLoad.lastClasstime), 32323);
+    } else if (m == "ping") {
+        sqs_client->sendMessage( creds.confirmation_client_sqs, creds.studentId );
     }
 }
 
@@ -224,7 +164,7 @@ void Modules::handleCheckin()
     classCheckPayload response;
     try {
         qDebug() << "Handling Checkin";
-        response =  lambda_client->checkInStudent(creds.studentId, creds.classmoorId);
+        response =  lambda_client->checkInStudent(creds.studentId, creds.classroomId);
         intialLoad.isCheckedIn = false;
         intialLoad.lastCheckin = response.classCheckMessage;
         intalizeState();

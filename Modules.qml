@@ -11,6 +11,7 @@ Item {
     width: 1310
     height: 768
 
+
     ModulesForm {
         id: modulesForm
         anchors.fill: parent
@@ -22,9 +23,17 @@ Item {
             modules.handleCheckin();
         }
         joinClasstimeButton.onClicked:  {
-            modules.joinClasstime();
-//            console.log("here")
-//            parent.modulesQml.stackView.push("ClasstimeInterface.qml");
+            isClasstime = true;
+            modulesForm.isDoneLoading = false;
+            modulesForm.isStateOne = false;
+            modulesForm.isStateTwo = false;
+            modulesForm.isStateThree = false;
+            modulesForm.isStateFour = false;
+
+            if (!isDoneLoading) {
+                modules.joinClasstime();
+                stackView.push("ClasstimeInterface.qml");
+            }
         }
     }
 
@@ -56,44 +65,45 @@ Item {
         }
 
         onChangeState: {
-
+            console.log("here2")
             modulesForm.lastCheckInMessage.text = classCheck_message;
             modulesForm.lastClasstimeMessage.text = classTime_message;
 
             switch (stateSetting) {
-                case 1:
-                    modulesForm.isDoneLoading = true;
-                    modulesForm.isStateOne = true;
-                    modulesForm.isStateTwo = false;
-                    modulesForm.isStateThree = false;
-                    modulesForm.isStateFour = false;
-                    break;
-                case 2:
-                    modulesForm.isDoneLoading = true;
-                    modulesForm.isStateTwo = true;
-                    modulesForm.isStateOne = false;
-                    modulesForm.isStateThree = false
-                    modulesForm.isStateFour = false
+            case 1:
+                modulesForm.isDoneLoading = true;
+                modulesForm.isStateOne = true;
+                modulesForm.isStateTwo = false;
+                modulesForm.isStateThree = false;
+                modulesForm.isStateFour = false;
+                break;
+            case 2:
+                modulesForm.isDoneLoading = true;
+                modulesForm.isStateTwo = true;
+                modulesForm.isStateOne = false;
+                modulesForm.isStateThree = false
+                modulesForm.isStateFour = false
 
-                    break;
-                case 3:
-                    modulesForm.isDoneLoading = true;
-                    modulesForm.isStateThree = true;
-                    modulesForm.isStateOne = false;
-                    modulesForm.isStateTwo = false
-                    modulesForm.isStateFour = false
-                    break;
-                case 4:
-                    modulesForm.isDoneLoading = true;
-                    modulesForm.isStateFour = true;
-                    modulesForm.isStateOne = false;
-                    modulesForm.isStateTwo = false
-                    modulesForm.isStateThree = false
-                    break;
-                default:
-                    modulesForm.isDoneLoading = false;
+                break;
+            case 3:
+                modulesForm.isDoneLoading = true;
+                modulesForm.isStateThree = true;
+                modulesForm.isStateOne = false;
+                modulesForm.isStateTwo = false
+                modulesForm.isStateFour = false
+                break;
+            case 4:
+                modulesForm.isDoneLoading = true;
+                modulesForm.isStateFour = true;
+                modulesForm.isStateOne = false;
+                modulesForm.isStateTwo = false
+                modulesForm.isStateThree = false
+                break;
+            default:
+
+                modulesForm.isDoneLoading = false;
             }
-                        console.log(modulesForm.isDoneLoading)
+            console.log(modulesForm.isDoneLoading)
         }
     }
 

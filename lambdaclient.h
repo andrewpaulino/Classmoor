@@ -25,8 +25,12 @@ public:
     joinClassroomPayload joinClassroom(Aws::String name, Aws::String code);
     intitalizeClassroomPayload intializeUser(Aws::String studentId, Aws::String classmoorId);
     classCheckPayload checkInStudent(Aws::String student_id, Aws::String classroom_id);
+    clastimeUpdatePayload updateClasstime(Aws::String classtimeId, Aws::String classroomId);
+    bool leaveClasstime(Aws::String studentId, Aws::String classtimeId,  Aws::String sqsUrl);
     bool checkConnection();
+    intitalizeClasstimePayload getClasstimeDetails( userCredentials v );
     std::string getLastFunctionResult();
+
 private:
     std::string lastFunctionResult;
     UtilityFunctions util;
@@ -36,7 +40,8 @@ private:
     void printIntitalizeClassroomPayload(intitalizeClassroomPayload v);
     void printJoinClassroomPayload(joinClassroomPayload v);
     void printClassCheckPayload(classCheckPayload v);
-
+    void printClassTimePayload(intitalizeClasstimePayload v);
+    void printClassTimeUpdatePayload(clastimeUpdatePayload v);
 };
 
 #endif // LAMBDACLIENT_H

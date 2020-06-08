@@ -14,7 +14,7 @@ bool Setup::writeToFile(joinClassroomPayload v)
     QFile file(filename);
     if (file.open(QIODevice::ReadWrite)) {
         QTextStream stream(&file);
-        stream << util.convertStdStringToQString(v.studentId) << endl << util.convertStdStringToQString(v.classroomId) << endl << util.convertStdStringToQString(v.classQueueUrl);
+        stream << util.convertStdStringToQString(v.studentId) << endl << util.convertStdStringToQString(v.classroomId) << endl << util.convertStdStringToQString(v.classSNSArn) << endl << util.convertStdStringToQString(v.classConfirmationSNSArn);
         return true;
     }
     return false;

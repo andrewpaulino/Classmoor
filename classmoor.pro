@@ -1,5 +1,6 @@
 QT += quick
 QT += concurrent
+QT+= webview
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -18,12 +19,12 @@ LIBS += -L/usr/local/lib64 -laws-cpp-sdk-core -laws-cpp-sdk-s3 -laws-cpp-sdk-sns
 
 SOURCES += \
         classmoor.cpp \
+        classtime.cpp \
         dynamoclient.cpp \
         lambdaclient.cpp \
         main.cpp \
         modules.cpp \
         setup.cpp \
-        snsclient.cpp \
         sqsclient.cpp \
         utilityfunctions.cpp
 
@@ -48,11 +49,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     NodeIterator.h \
     classmoor.h \
+    classtime.h \
     dynamoclient.h \
     lambdaclient.h \
     linkedlist.h \
     modules.h \
     setup.h \
-    snsclient.h \
     sqsclient.h \
     utilityfunctions.h

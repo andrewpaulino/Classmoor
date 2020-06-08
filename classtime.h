@@ -1,6 +1,5 @@
-#ifndef MODULES_H
-#define MODULES_H
-
+#ifndef CLASSTIME_H
+#define CLASSTIME_H
 #include <QObject>
 #include "dynamoclient.h"
 #include "lambdaclient.h"
@@ -24,41 +23,33 @@
 #include <QDateTime>
 #include <QTimer>
 
-class Modules : public QObject
+class Classtime : public QObject
 {
     Q_OBJECT
 public:
-    explicit Modules(QObject *parent = nullptr);
-    ~Modules();
-    void runIntialization();
+    explicit Classtime(QObject *parent = nullptr);
+
 private:
-    QFutureWatcher<void> watcher;
-    QFuture<void> future;
     DynamoClient* dynamo_client;
     UtilityFunctions util;
     lambdaClient* lambda_client;
     userCredentials creds;
-    void intalizeState();
-    intitalizeClassroomPayload intialLoad;
     bool readFromFile();
+    void intalizeState();
+    intitalizeClasstimePayload intialLoad;
     SqsClient* sqs_client;
-    void runMessageUpdates();
-    void startPolling( );
     void activateTimer();
     int timeInSeconds = 0;
     QTimer* activeTimer;
+    clastimeUpdatePayload runUpdateThreadedFunction(Aws::String classtimeId, Aws::String classroomId );
 signals:
-    void changeState(QVariant stateSetting, QVariant classCheck_message, QVariant classTime_message, int timeInSec);
-    void newMessage(QString m);
-    void updateTimer(int timeInSec);
+    void updateComponents(QString lessonHeader, QString lessonResource, int numOfParticipants);
+    void updateTimer(int timeInSeconds);
 public slots:
-    void intialize();
-    void joinClasstime();
+    void retrieveClasstimeDetails();
     void updateTime();
+    void leaveClasstime();
     void recievedMessage(QString m);
-    void handleCheckin();
-
-
 };
 
-#endif // MODULES_H
+#endif // CLASSTIME_H

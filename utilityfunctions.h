@@ -18,10 +18,30 @@ typedef struct normalPayload {
 typedef struct joinClassroomPayload {
    int statusCode;
    std::string classroomId;
-   std::string classQueueUrl;
+   std::string classSNSArn;
    std::string bodyResponse;
    std::string studentId;
+   std::string classConfirmationSNSArn;
 } joinClassroomPayload;
+
+typedef struct intitalizeClasstimePayload {
+    int statusCode;
+    std::string classtimeLessonHeader;
+    int numOfParticipants;
+    int timeElapsed;
+    std::string classtimeSQSUrl;
+    std::string classtimeId;
+    std::string bodyResponse;
+    std::string classtimeLessonResource;
+} intitalizeClasstimePayload;
+
+typedef struct clastimeUpdatePayload {
+    std::string classtimeLessonHeader;
+    int numOfParticipants;
+    std::string classtimeLessonResource;
+    std::string bodyResponse;
+    int statusCode;
+}clastimeUpdatePayload;
 
 typedef struct intitalizeClassroomPayload {
    bool isClasstime;
@@ -38,6 +58,13 @@ typedef struct classCheckPayload {
     int statusCode;
     std::string classCheckMessage;
 } classCheckPayload;
+
+typedef struct userCredentials {
+    Aws::String client_sqs;
+    Aws::String classroomId;
+    Aws::String studentId;
+    Aws::String confirmation_client_sqs;
+} userCredentials;
 
 class UtilityFunctions
 {

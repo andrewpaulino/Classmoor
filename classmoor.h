@@ -2,7 +2,6 @@
 #define CLASSMOOR_H
 
 #include <QObject>
-#include "snsclient.h"
 #include "dynamoclient.h"
 #include "lambdaclient.h"
 #include <QFileInfo>
