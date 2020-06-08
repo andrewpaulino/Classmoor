@@ -640,7 +640,7 @@ Page {
     states: [
         State {
             name: "LoadingApp"
-            when: !isDoneLoading
+            when: isDoneLoading == false
 
             PropertyChanges {
                 target: busyIndicator

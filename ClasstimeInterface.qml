@@ -42,10 +42,11 @@ Item {
             color:"#F5F5F5"
         }
         leaveButtonMouseArea.onPressed: {
-//            backgroundRect.color = "#550bb3"
+            //            backgroundRect.color = "#550bb3"
             console.log("here")
-            classtime.leaveClasstime();
+
             stackView.push("Modules.qml");
+            classtime.leaveClasstime();
         }
 
     }

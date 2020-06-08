@@ -15,23 +15,25 @@ void SqsClient::startPolling(Aws::String queueUrl)
 
 SqsClient::~SqsClient()
 {
+    watcher.waitForFinished();
     qDebug() << "Cancelling Polling Thread" << endl;
-    future.cancel();
+//    future.cancel();
 }
 
 void SqsClient::closePolling()
 {
     qDebug() << "Closing POLLS" << endl;
     closeThread = true;
-    if(future.isRunning()) {
-        qDebug() << "STILLL RUNNING IN ˇHREAD";
-    }
     watcher.waitForFinished();
-    qDebug() << "Is Thread Still Running? " << future.isFinished() << endl;
+    qDebug() << "Is Thread Still Running? " << watcher.isFinished() << endl;
 }
 
 
 bool SqsClient::start() {
+    if (closeThread) {
+        qDebug() << "Ending!" << endl;
+        return true;
+    }
     Aws::String queue_url = sqsUrl;
     Aws::SQS::Model::ReceiveMessageRequest rm_req;
     Aws::SQS::Model::SetQueueAttributesRequest request;
@@ -39,7 +41,7 @@ bool SqsClient::start() {
     rm_req.SetMaxNumberOfMessages(1);
     request.SetQueueUrl(queue_url);
     Aws::String poll_time = "400";
-    request.AddAttributes(Aws::SQS::Model::QueueAttributeName::ReceiveMessageWaitTimeSeconds, "5");
+    request.AddAttributes(Aws::SQS::Model::QueueAttributeName::ReceiveMessageWaitTimeSeconds, "10");
     auto outcome = SetQueueAttributes(request);
     if (outcome.IsSuccess())
     {
@@ -55,7 +57,9 @@ bool SqsClient::start() {
 
 
     do {
-
+        if (closeThread) {
+            break;
+        }
         auto rm_out = ReceiveMessage(rm_req);
 
 
@@ -70,9 +74,7 @@ bool SqsClient::start() {
         const auto& messages = rm_out.GetResult().GetMessages();
 
 
-        if (closeThread) {
-            break;
-        }
+
         if (messages.size() == 0)
         {
 

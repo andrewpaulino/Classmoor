@@ -18,7 +18,6 @@ void Classtime::retrieveClasstimeDetails()
 
     try {
         readFromFile();
-        // Step 1: Retrieve the details for classtime
         intialLoad = lambda_client->getClasstimeDetails(creds);
         qint64 d = QDateTime::currentSecsSinceEpoch();
         timeInSeconds = d - intialLoad.timeElapsed;
@@ -28,7 +27,7 @@ void Classtime::retrieveClasstimeDetails()
         emit updateComponents( util.convertStdStringToQString(intialLoad.classtimeLessonHeader), util.convertStdStringToQString(intialLoad.classtimeLessonResource), intialLoad.numOfParticipants );
 
         connect(&(*sqs_client), &SqsClient::newMessage, this, &Classtime::recievedMessage, Qt::QueuedConnection);
-        sqs_client->startPolling(creds.client_sqs);
+        sqs_client->startPolling( util.convertStdStringToAWSString( intialLoad.classtimeSQSUrl));
     } catch (std::exception e) {
         std::cout << e.what() << std::endl;
     }
@@ -46,9 +45,9 @@ void Classtime::leaveClasstime()
 {
     try {
         bool result = false;
-        result = lambda_client->leaveClasstime( creds.studentId, util.convertStdStringToAWSString( intialLoad.classtimeId ), creds.client_sqs);
+        result = lambda_client->leaveClasstime( creds.studentId, util.convertStdStringToAWSString( intialLoad.classtimeId ), creds.classroomId, util.convertStdStringToAWSString(intialLoad.classtimeSQSUrl));
         if (result) {
-
+            sqs_client->closePolling();
         }
     } catch (std::exception e) {
         qDebug() << e.what() << endl;
@@ -122,7 +121,8 @@ bool Classtime::readFromFile()
 
 Classtime::~Classtime()
 {
-    sqs_client->closePolling();
+    qDebug() << "DESTROYING CLASSTIME" << endl;
+        sqs_client->closePolling();
 }
 
 

@@ -26,7 +26,7 @@ public:
     intitalizeClassroomPayload intializeUser(Aws::String studentId, Aws::String classmoorId);
     classCheckPayload checkInStudent(Aws::String student_id, Aws::String classroom_id);
     clastimeUpdatePayload updateClasstime(Aws::String classtimeId, Aws::String classroomId);
-    bool leaveClasstime(Aws::String studentId, Aws::String classtimeId,  Aws::String sqsUrl);
+    bool leaveClasstime(Aws::String studentId, Aws::String classtimeId, Aws::String classroomId, Aws::String tempSQSUrl);
     bool checkConnection();
     intitalizeClasstimePayload getClasstimeDetails( userCredentials v );
     std::string getLastFunctionResult();

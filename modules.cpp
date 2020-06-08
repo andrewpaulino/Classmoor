@@ -15,8 +15,8 @@ Modules::Modules(QObject *parent) : QObject(parent) {
 
 Modules::~Modules()
 {
-    qDebug() << "Closing Modules" << endl;
-   sqs_client->closePolling();
+    qDebug() << "DESTROYING MODULES" << endl;
+    sqs_client->closePolling();
 }
 
 
@@ -81,8 +81,9 @@ void Modules::intalizeState()
 
 void Modules::joinClasstime(){
      // Closing poll
-     emit changeState(5, "N/A", "N/A", 0);
-     sqs_client->closePolling();
+    sqs_client->closePolling();
+//     emit changeState(5, "N/A", "N/A", 0);
+//     sqs_client->closePolling();
 }
 void Modules::activateTimer()
 {
@@ -189,4 +190,3 @@ void Modules::handleCheckin()
     }
 
 }
-

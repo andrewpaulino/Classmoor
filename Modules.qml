@@ -31,8 +31,8 @@ Item {
             modulesForm.isStateFour = false;
 
             if (!isDoneLoading) {
-                modules.joinClasstime();
                 stackView.push("ClasstimeInterface.qml");
+                modules.joinClasstime();
             }
         }
     }
@@ -100,7 +100,7 @@ Item {
                 modulesForm.isStateThree = false
                 break;
             case 5:
-                modulesForm.isDoneLoading = false;
+                modulesForm.isDoneLoading = true;
                 modulesForm.isStateFour = false;
                 modulesForm.isStateOne = false;
                 modulesForm.isStateTwo = false
