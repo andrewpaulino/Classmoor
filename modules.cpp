@@ -152,7 +152,9 @@ void Modules::recievedMessage(QString m)
     qDebug() << "Recieved Message: " << m << endl;
     if (m == "newClasstime" && intialLoad.isCheckedIn) {
         emit changeState(1, util.convertStdStringToQString(intialLoad.lastCheckin),  util.convertStdStringToQString(intialLoad.lastClasstime), 32323);
-    } else if (m == "ping") {
+    } else if (m == "newClasstime" && !intialLoad.isCheckedIn) {
+         emit changeState(2, util.convertStdStringToQString(intialLoad.lastCheckin),  util.convertStdStringToQString(intialLoad.lastClasstime), 32323);
+    }else if (m == "ping") {
         sqs_client->sendMessage( creds.confirmation_client_sqs, creds.studentId );
     }
 }

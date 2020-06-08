@@ -84,11 +84,9 @@ void SqsClient::start() {
             Aws::String a = message.GetBody();
 
             Aws::Utils::Json::JsonValue bodyObject(message.GetBody());
-
-
-            util.convertStdStringToQString( util.convertAWSStringToStdString(bodyObject.View().GetString("Message")));
-
-            emit newMessage( util.convertStdStringToQString( util.convertAWSStringToStdString(a)) );
+            std::cout << util.convertAWSStringToStdString(bodyObject.View().GetString("Message")) << std::endl;
+            qDebug() << "HERE:" << util.convertStdStringToQString( util.convertAWSStringToStdString(bodyObject.View().GetString("Message")));
+            emit newMessage( util.convertStdStringToQString( util.convertAWSStringToStdString(bodyObject.View().GetString("Message"))));
 
             Aws::SQS::Model::DeleteMessageRequest dm_req;
             dm_req.SetQueueUrl(queue_url);
