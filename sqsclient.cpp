@@ -58,6 +58,7 @@ bool SqsClient::start() {
 
     do {
         if (closeThread) {
+            qDebug() << "CLOSE THREA DBREAK" << endl;
             break;
         }
         auto rm_out = ReceiveMessage(rm_req);
@@ -88,7 +89,7 @@ bool SqsClient::start() {
 
             Aws::Utils::Json::JsonValue bodyObject(message.GetBody());
             std::cout << util.convertAWSStringToStdString(bodyObject.View().GetString("Message")) << std::endl;
-            qDebug() << "Incoming Message:" << util.convertStdStringToQString( util.convertAWSStringToStdString(bodyObject.View().GetString("Message")));
+//            qDebug() << "Incoming Message:" << util.convertStdStringToQString( util.convertAWSStringToStdString(bodyObject.View().GetString("Message")));
             emit newMessage( util.convertStdStringToQString( util.convertAWSStringToStdString(bodyObject.View().GetString("Message"))));
 
             Aws::SQS::Model::DeleteMessageRequest dm_req;

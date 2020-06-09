@@ -11,17 +11,17 @@
 #include <QDebug>
 #include <QString>
 typedef struct normalPayload {
-   int statusCode;
-   std::string bodyResponse;
+    int statusCode;
+    std::string bodyResponse;
 } normalPayload;
 
 typedef struct joinClassroomPayload {
-   int statusCode;
-   std::string classroomId;
-   std::string classSNSArn;
-   std::string bodyResponse;
-   std::string studentId;
-   std::string classConfirmationSNSArn;
+    int statusCode;
+    std::string classroomId;
+    std::string classSNSArn;
+    std::string bodyResponse;
+    std::string studentId;
+    std::string classConfirmationSNSArn;
 } joinClassroomPayload;
 
 typedef struct intitalizeClasstimePayload {
@@ -44,13 +44,13 @@ typedef struct clastimeUpdatePayload {
 }clastimeUpdatePayload;
 
 typedef struct intitalizeClassroomPayload {
-   bool isClasstime;
-   bool isCheckedIn;
-   std::string bodyResponse;
-   int statusCode;
-   std::string lastCheckin;
-   std::string lastClasstime;
-   int timeRemaining;
+    bool isClasstime;
+    bool isCheckedIn;
+    std::string bodyResponse;
+    int statusCode;
+    std::string lastCheckin;
+    std::string lastClasstime;
+    int timeRemaining;
 } intitalizeClassroomPayload;
 
 typedef struct classCheckPayload {
@@ -58,6 +58,12 @@ typedef struct classCheckPayload {
     int statusCode;
     std::string classCheckMessage;
 } classCheckPayload;
+
+
+typedef struct classaskResponsePayload {
+    std::string bodyResponse;
+    int statusCode;
+}classaskResponsePayload;
 
 typedef struct userCredentials {
     Aws::String client_sqs;
@@ -70,7 +76,7 @@ class UtilityFunctions
 {
 public:
     UtilityFunctions();
-//    Aws::String convertPayload(Aws::Utils::Json::JsonValue* v, int setting);
+    //    Aws::String convertPayload(Aws::Utils::Json::JsonValue* v, int setting);
     std::string convertAWSStringToStdString (Aws::String v);
     QString convertStdStringToQString(std::string v);
     Aws::String convertStdStringToAWSString(std::string v);

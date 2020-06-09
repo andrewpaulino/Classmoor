@@ -329,6 +329,55 @@ clastimeUpdatePayload lambdaClient::updateClasstime(Aws::String classtimeId, Aws
     }
 }
 
+classaskResponsePayload lambdaClient::postQuestion(Aws::String questionText, bool isAnon, userCredentials creds)
+{
+    Aws::String functionName = "classmoor-api-prod";
+
+
+    Aws::Lambda::Model::InvokeRequest invokeRequest;
+    invokeRequest.SetFunctionName(functionName);
+    invokeRequest.SetInvocationType(Aws::Lambda::Model::InvocationType::RequestResponse);
+    invokeRequest.SetLogType(Aws::Lambda::Model::LogType::Tail);
+    std::shared_ptr<Aws::IOStream> payload = Aws::MakeShared<Aws::StringStream>("body");
+
+    Aws::Utils::Json::JsonValue bodyObject;
+    bodyObject.WithString("clientPath", "newQuestion");
+    bodyObject.WithString("question", questionText);
+    bodyObject.WithBool("isAnonymous", isAnon);
+    bodyObject.WithString("studentId", creds.studentId);
+    bodyObject.WithString("classroomId", creds.classroomId);
+
+    Aws::Utils::Json::JsonValue jsonPayload;
+    jsonPayload.WithObject("body", bodyObject);
+
+
+    *payload << jsonPayload.View().WriteReadable();
+
+    invokeRequest.SetBody(payload);
+    invokeRequest.SetContentType("application/javascript");
+
+    auto outcome = Invoke(invokeRequest);
+
+    if (outcome.IsSuccess()) {
+        auto &result = outcome.GetResult();
+        Aws::Utils::Json::JsonValue resultObj;
+        Aws::IOStream& payload = result.GetPayload();
+        resultObj = payload;
+
+        Aws::String statusCode;
+
+        classaskResponsePayload response;
+        qDebug() << "Testing FUNCTION" <<resultObj.View().GetInteger("statusCode") << endl;
+                    response.statusCode = resultObj.View().GetInteger("statusCode");
+        response.bodyResponse = util.convertAWSStringToStdString(resultObj.View().GetString("statusMessage"));
+
+
+        return response;
+    } else {
+        throw std::runtime_error("Unable to connect to lambda");
+    }
+}
+
 bool lambdaClient::leaveClasstime(Aws::String studentId, Aws::String classtimeId, Aws::String classroomId,  Aws::String tempSQSUrl)
 {
     Aws::String functionName = "classmoor-api-prod";

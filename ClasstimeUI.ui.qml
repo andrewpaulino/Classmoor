@@ -10,13 +10,20 @@ Page {
     id: page
     width: 1310
     height: 768
+    property alias webView: webView
+    property alias anonSwitch: anonSwitch
+    property alias askButtonMouseArea: askButtonMouseArea
+    property alias questionField: questionField
     property alias leaveButton: leaveButton
+    property bool noInputInQuestionField: false
+    property bool messageSent: false
+    property bool messageFailed: false
     property alias leaveButtonMouseArea: leaveButtonMouseArea
     property alias participants: participants
     property alias lessonHeader: lessonHeader
     property alias timeText: timeText
     //FIX LOADING
-//    property bool isDoneLoading: true
+    //    property bool isDoneLoading: true
     contentWidth: 4
     title: qsTr("Classtime")
     background: Rectangle {
@@ -51,7 +58,7 @@ Page {
         id: scrollView1
         anchors.fill: parent
         clip: true
-        contentHeight: parent.height + 300
+        contentHeight: parent.height + 700
 
         RowLayout {
             id: rowLayout0
@@ -187,242 +194,383 @@ Page {
             id: rowLayout1
             spacing: 0
             anchors.bottom: columnLayout.top
-            anchors.bottomMargin: 0
+            anchors.bottomMargin: 10
             anchors.top: rowLayout0.bottom
-            anchors.topMargin: 30
+            anchors.topMargin: 5
             anchors.right: parent.right
             anchors.rightMargin: 40
             anchors.left: parent.left
             anchors.leftMargin: 40
-
-            ColumnLayout {
-                id: questionColumn
-                width: 698
-                height: 179
+            Rectangle {
+                id: rectangle1
+                width: 590
+                height: 200
+                color: "#ffffff"
+                radius: 8
+                visible: false
                 Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                Layout.fillHeight: false
                 Layout.fillWidth: false
-                spacing: 17.3
-                Layout.fillHeight: true
+            }
+
+            DropShadow {
+                id: dropShadow1
+                width: 590
+                height: 200
+                horizontalOffset: 0
+                verticalOffset: 3
+                radius: 13.0
+                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
                 visible: true
+                samples: 17
+                color: "#c4bbbb"
+                source: rectangle1
 
-                RowLayout {
-                    id: subLayout1
-                    Text {
-                        id: element4
-                        width: 169
-                        height: 85
-                        text: qsTr("Class")
-                        font.family: "Lato"
-                        font.bold: true
-                        font.pixelSize: 30
-                    }
+                Rectangle {
+                    id: rectangle2
+                    color: "#2c2f33"
+                    radius: 8
+                    border.width: 0
+                    anchors.fill: parent
 
-                    Text {
-                        id: element5
-                        width: 169
-                        height: 85
-                        color: "#018d8d"
-                        text: qsTr("Ask")
-                        font.family: "Lato"
-                        font.bold: true
-                        font.pixelSize: 30
-                    }
-                    spacing: 0
-                    Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                }
-
-                ColumnLayout {
-                    id: askQuestionInfoColumn
-                    width: 100
-                    height: 100
-
-                    Text {
-                        id: questionBody
-                        text: qsTr("You can ask your question anonymously or not, and it will give them a push notification instantaneously")
+                    ColumnLayout {
+                        id: questionColumn
+                        x: -695
+                        y: -35
+                        anchors.leftMargin: 14
+                        anchors.bottomMargin: 14
+                        anchors.topMargin: 14
+                        anchors.rightMargin: 14
+                        anchors.fill: parent
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
                         Layout.fillWidth: false
-                        wrapMode: Text.WordWrap
-                        font.pixelSize: 12
-                    }
+                        spacing: 9
+                        Layout.fillHeight: true
+                        visible: true
+
+                        ColumnLayout {
+                            id: columnLayout2
+                            width: 100
+                            height: 100
+                            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+
+                            RowLayout {
+                                id: subLayout1
+                                Text {
+                                    id: element4
+                                    width: 169
+                                    height: 85
+                                    color: "#fbfbfb"
+                                    text: qsTr("Class")
+                                    font.family: "Lato"
+                                    font.bold: true
+                                    font.pixelSize: 30
+                                }
+
+                                Text {
+                                    id: element5
+                                    width: 169
+                                    height: 85
+                                    color: "#018d8d"
+                                    text: qsTr("Ask")
+                                    font.family: "Lato"
+                                    font.bold: true
+                                    font.pixelSize: 30
+                                }
+                                spacing: 0
+                                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                            }
+
+                            ColumnLayout {
+                                id: askQuestionInfoColumn
+                                width: 100
+                                height: 100
+
+                                Text {
+                                    id: questionBody
+                                    width: 430
+                                    color: "#ada7a7"
+                                    Layout.preferredWidth: 430
+                                    text: qsTr("You can ask your question anonymously or not, and it will give them a push notification instantaneously")
+                                    Layout.fillWidth: false
+                                    wrapMode: Text.WordWrap
+                                    font.pixelSize: 12
+                                }
 
 
 
-                }
+                            }
 
-                RowLayout {
-                    id: questionActionRow
-                    width: 698
-                    height: 100
-                    spacing: 30
-                    Layout.fillWidth: true
 
-                    ColumnLayout {
-                        id: questionAnonColumn
-                        width: 100
-                        height: 100
 
-                        Label {
-                            id: anonymousSwitch
-                            color: "#47360b"
-                            text: qsTr("ANONYMOUS")
-                            font.bold: false
-                            font.weight: Font.Medium
-                            font.pointSize: 9
-                            font.family: "Lato"
-                        }
-
-                        Switch {
-                            id: anonSwitch
-                            text: qsTr("")
-                        }
-                    }
-
-                    ColumnLayout {
-                        id: questionFieldColumn
-                        width: 171
-                        height: 100
-                        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                        Layout.fillWidth: true
-
-                        Label {
-                            id: anonymousSwitch1
-                            color: "#47360b"
-                            text: qsTr("YOUR QUESTION")
-                            font.pointSize: 9
-                            font.weight: Font.Normal
-                            font.family: "Lato"
-                            font.letterSpacing: 1.2
                         }
 
                         RowLayout {
-                            id: textFieldRow
-                            width: 100
+                            id: questionActionRow
+                            width: 698
                             height: 100
-                            Layout.fillHeight: true
+                            spacing: 30
                             Layout.fillWidth: true
 
-                            TextField {
-                                id: textField
-                                height: 50
-                                font.pointSize: 11
-                                Layout.fillHeight: false
-                                rightPadding: 16
-                                Layout.fillWidth: true
-                                placeholderText: qsTr("Can you explain that?")
-                            }
-                            Button {
-                                id: askButton
-                                width: 400
-                                height: 30
-                                text: qsTr("Join Classroom")
-                                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                                contentItem: Text {
-                                    id: element103
-                                    color: askButton.down ? "#e6f0ff" : "white"
-                                    text: "Ask"
-                                    opacity: enabled ? 1.0 : 0.3
-                                    font.bold: true
-                                    horizontalAlignment: Text.AlignHCenter
-                                    elide: Text.ElideRight
-                                    font.family: "Lato"
-                                    verticalAlignment: Text.AlignVCenter
+                            ColumnLayout {
+                                id: questionAnonColumn
+                                width: 100
+                                height: 100
+
+                                Label {
+                                    id: anonymousSwitch
+                                    color: "#c5c3bf"
+                                    text: qsTr("ANONYMOUS")
+                                    font.bold: false
                                     font.weight: Font.Medium
-                                    font.pointSize: 11
+                                    font.pointSize: 9
+                                    font.family: "Lato"
                                 }
-                                padding: 11
-                                Layout.fillHeight: false
-                                background: Rectangle {
-                                    id: backgroundRect2
-                                    color:  "#7131bf"
-                                    radius: 6
+
+                                Switch {
+                                    id: anonSwitch
+                                    text: qsTr("")
                                 }
-                                font.family: "Lato"
+                            }
+
+                            ColumnLayout {
+                                id: questionFieldColumn
+                                width: 430
+                                height: 100
+                                Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                                 Layout.fillWidth: true
-                                flat: false
-                                font.pointSize: 20
 
-                                MouseArea {
-                                    id: askButtonMouseArea
-                                    height: 40
-                                    anchors.bottomMargin: 0
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    cursorShape: Qt.PointingHandCursor
+                                Label {
+                                    id: label
+                                    text: qsTr("Label")
+                                    visible: false
+                                }
+
+                                Label {
+                                    id: anonymousSwitch1
+                                    color: "#c5c3bf"
+                                    text: qsTr("YOUR QUESTION")
+                                    font.pointSize: 9
+                                    font.weight: Font.Normal
+                                    font.family: "Lato"
+                                    font.letterSpacing: 1.2
                                 }
 
 
-                                Connections {
-                                    target: askButtonMouseArea
-                                    onEntered: {
-                                        backgroundRect2.color = "#7b38cf"
+                                RowLayout {
+                                    id: textFieldRow
+                                    width: 400
+                                    height: 100
+                                    Layout.fillHeight: true
+                                    Layout.fillWidth: true
+
+                                    TextField {
+                                        id: questionField
+                                        width: 300
+                                        height: 50
+                                        font.pointSize: 11
+                                        Layout.fillHeight: false
+                                        rightPadding: 16
+                                        Layout.fillWidth: true
+                                        placeholderText: qsTr("Can you explain that?")
                                     }
-                                    onExited: {
-                                        backgroundRect2.color = "#7131bf"
+                                    Button {
+                                        id: askButton
+                                        width: 400
+                                        height: 30
+                                        text: qsTr("Join Classroom")
+                                        contentItem: Text {
+                                            id: element103
+                                            color: askButton.down ? "#e6f0ff" : "white"
+                                            text: "Ask"
+                                            opacity: enabled ? 1.0 : 0.3
+                                            font.bold: true
+                                            horizontalAlignment: Text.AlignHCenter
+                                            elide: Text.ElideRight
+                                            font.family: "Lato"
+                                            verticalAlignment: Text.AlignVCenter
+                                            font.weight: Font.Medium
+                                            font.pointSize: 11
+                                        }
+                                        padding: 11
+                                        Layout.fillHeight: false
+                                        background: Rectangle {
+                                            id: backgroundRect2
+                                            color:  "#7131bf"
+                                            radius: 6
+                                        }
+                                        font.family: "Lato"
+                                        Layout.fillWidth: true
+                                        flat: false
+                                        font.pointSize: 20
+
+                                        MouseArea {
+                                            id: askButtonMouseArea
+                                            height: 40
+                                            anchors.bottomMargin: 0
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                                            cursorShape: Qt.PointingHandCursor
+                                        }
+
+
+                                        Connections {
+                                            target: askButtonMouseArea
+                                            onEntered: {
+                                                backgroundRect2.color = "#7b38cf"
+                                            }
+                                            onExited: {
+                                                backgroundRect2.color = "#7131bf"
+                                            }
+                                        }
                                     }
+                                }
+
+
+                            }
+                        }
+
+
+
+
+
+
+
+
+
+
+
+                    }
+                }
+
+
+
+            }
+
+            Rectangle {
+                id: rectangle4
+                width: 590
+                height: 200
+                color: "#ffffff"
+                radius: 8
+                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                Layout.fillWidth: false
+                visible: false
+                Layout.fillHeight: false
+            }
+
+            DropShadow {
+                id: dropShadow2
+                width: 590
+                height: 200
+                color: "#c4bbbb"
+                radius: 13
+                verticalOffset: 3
+                Layout.alignment: Qt.AlignRight | Qt.AlignTop
+                horizontalOffset: 0
+                visible: true
+
+                Rectangle {
+                    id: rectangle3
+                    color: "#2c2f33"
+                    radius: 8
+                    border.width: 0
+                    anchors.fill: parent
+
+                    ColumnLayout {
+                        id: columnLayout1
+                        spacing: 0
+                        anchors.rightMargin: 14
+                        anchors.leftMargin: 14
+                        anchors.bottomMargin: 14
+                        anchors.topMargin: 14
+                        anchors.fill: parent
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+
+
+                        ColumnLayout {
+                            id: columnLayout7
+                            width: 100
+                            height: 100
+                            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                            spacing: 9
+                            RowLayout {
+                                id: subLayout2
+                                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                                Text {
+                                    id: element7
+                                    width: 169
+                                    height: 85
+                                    color: "#fbfbfb"
+                                    text: qsTr("Class")
+                                    font.family: "Lato"
+                                    font.bold: true
+                                    font.pixelSize: 30
+                                }
+
+                                Text {
+                                    id: element15
+                                    width: 169
+                                    height: 85
+                                    color: "#cc0c0c"
+                                    text: qsTr("Test")
+                                    font.family: "Lato"
+                                    font.bold: true
+                                    font.pixelSize: 30
+                                }
+                                spacing: 0
+                            }
+
+                            ColumnLayout {
+                                id: askQuestionInfoColumn1
+                                width: 100
+                                height: 100
+                                Text {
+                                    id: questionBody1
+                                    width: 430
+                                    color: "#ada7a7"
+                                    text: qsTr("Classtest is a realtime service which provides intensive testing and the ablities to test on the fly")
+                                    wrapMode: Text.WordWrap
+                                    Layout.fillWidth: false
+                                    Layout.preferredWidth: 430
+                                    font.pixelSize: 12
                                 }
                             }
                         }
 
+                        RowLayout {
+                            id: rowLayout
+                            width: 100
+                            height: 100
+                            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+
+                            Text {
+                                id: element6
+                                width: 169
+                                height: 100
+                                color: "#88838d"
+                                text: qsTr("No assigned test or avaliable ")
+                                Layout.fillWidth: true
+                                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                                font.family: "Lato"
+                                font.bold: true
+                                font.pixelSize: 30
+                            }
+                        }
+
+
                     }
                 }
-
-
-
-
-
-
-
-
-
+                samples: 17
+                source: rectangle4
             }
 
-            ColumnLayout {
-                id: columnLayout1
-                width: 100
-                height: 100
-                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
 
 
-                RowLayout {
-                    id: subLayout3
-                    Text {
-                        id: element9
-                        width: 169
-                        height: 85
-                        text: qsTr("Class")
-                        font.family: "Lato"
-                        font.bold: true
-                        font.pixelSize: 30
-                    }
-
-                    Text {
-                        id: element11
-                        width: 169
-                        height: 85
-                        color: "#e3061d"
-                        text: qsTr("Test")
-                        font.family: "Lato"
-                        font.bold: true
-                        font.pixelSize: 30
-                    }
-                    spacing: 0
-                    Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                }
-
-                Text {
-                    id: element6
-                    width: 169
-                    height: 85
-                    color: "#88838d"
-                    text: qsTr("No assigned test or avaliable ")
-                    Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                    font.family: "Lato"
-                    font.bold: true
-                    font.pixelSize: 20
-                }
-            }
 
 
         }
+
 
 
 
@@ -433,7 +581,8 @@ Page {
             id: columnLayout
             x: 40
             y: 468
-            height: 398
+            width: 1500
+            height: 600
             anchors.right: parent.right
             anchors.rightMargin: 40
             anchors.left: parent.left
@@ -467,9 +616,9 @@ Page {
             Item {
                 id: element
                 width: 700
-                height: 200
+                height: 900
                 Layout.fillHeight: true
-                Layout.fillWidth: false
+                Layout.fillWidth: true
 
                 WebView {
                     id: webView
@@ -484,6 +633,8 @@ Page {
 
             }
         }
+
+
 
     }
 
@@ -675,38 +826,145 @@ Page {
         },
         State {
             name: "State1"
+
+            PropertyChanges {
+                target: label
+                visible: false
+            }
+        },
+        State {
+            name: "State2"
+            when: noInputInQuestionField === true
+
+            PropertyChanges {
+                target: label
+                color: "#e51111"
+                text: qsTr("Please enter a question in the field")
+                font.letterSpacing: 1.2
+                font.bold: true
+                visible: true
+            }
+
+            PropertyChanges {
+                target: page
+                visible: true
+            }
+
+            PropertyChanges {
+                target: element4
+                font.letterSpacing: 0.5
+            }
+
+            PropertyChanges {
+                target: element5
+                font.letterSpacing: 0.5
+            }
+
+            PropertyChanges {
+                target: element7
+                font.letterSpacing: 0.5
+            }
+
+            PropertyChanges {
+                target: element15
+                font.letterSpacing: 0.5
+            }
+        },
+        State {
+            name: "Message Sent!"
+            when: messageSent === true
+            PropertyChanges {
+                target: label
+                color: "#5cd34a"
+                text: qsTr("Message Sent!")
+                font.bold: true
+                visible: true
+            }
+
+            PropertyChanges {
+                target: page
+                visible: true
+            }
+        },
+        State {
+            name: "failed to send"
+            when: messageFailed === true
+            PropertyChanges {
+                target: label
+                color: "#e51111"
+                text: qsTr("Failed to send the message, try again!")
+                font.letterSpacing: 1.2
+                visible: true
+                font.bold: true
+            }
+
+            PropertyChanges {
+                target: page
+                visible: true
+            }
+
+            PropertyChanges {
+                target: element4
+                font.letterSpacing: 0.5
+            }
+
+            PropertyChanges {
+                target: element5
+                font.letterSpacing: 0.5
+            }
+
+            PropertyChanges {
+                target: element7
+                font.letterSpacing: 0.5
+            }
+
+            PropertyChanges {
+                target: element15
+                font.letterSpacing: 0.5
+            }
         }
     ]
 }
 
 /*##^##
 Designer {
-    D{i:0;customId:"";formeditorZoom:0.6600000262260437}D{i:9;anchors_height:200;anchors_width:200;invisible:true}
+    D{i:0;customId:"";formeditorZoom:0.5}D{i:75;invisible:true}D{i:9;anchors_height:200;anchors_width:200;invisible:true}
 D{i:10;invisible:true}D{i:8;anchors_height:200;anchors_width:200;invisible:true}D{i:11;invisible:true}
 D{i:17;anchors_height:200;anchors_width:100;anchors_x:36;anchors_y:242}D{i:13;invisible:true}
-D{i:6;anchors_height:163;anchors_width:1920;anchors_x:0;anchors_y:0}D{i:22;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
-D{i:20;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:24;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
-D{i:23;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:27;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
-D{i:28;anchors_height:200;anchors_width:200;anchors_x:36;anchors_y:118}D{i:26;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
-D{i:30;anchors_height:200;anchors_width:100;anchors_x:83;anchors_y:367}D{i:32;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
-D{i:37;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:31;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
-D{i:29;anchors_height:200;anchors_width:100;anchors_x:83;anchors_y:242}D{i:25;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
-D{i:19;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:40;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
-D{i:41;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:39;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
-D{i:42;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:38;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
-D{i:18;anchors_height:200;anchors_width:100;anchors_x:36;anchors_y:242}D{i:45;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
-D{i:46;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:44;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
-D{i:48;anchors_height:200;anchors_width:200;anchors_x:36;anchors_y:118}D{i:47;anchors_x:36}
-D{i:43;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:5;anchors_height:163;anchors_width:1920;anchors_x:0;anchors_y:0}
-D{i:50;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118;invisible:true}
-D{i:51;invisible:true}D{i:49;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118;invisible:true}
-D{i:55;anchors_height:163;anchors_width:1920;anchors_x:0;anchors_y:0}D{i:56;anchors_height:163;anchors_width:1920;anchors_x:0;anchors_y:0}
-D{i:54;anchors_height:100;anchors_width:100;anchors_x:312;anchors_y:214}D{i:58;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118;invisible:true}
-D{i:59;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118;invisible:true}
-D{i:57;anchors_height:163;anchors_width:1920;anchors_x:0;anchors_y:0}D{i:61;invisible:true}
-D{i:62;invisible:true}D{i:60;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118;invisible:true}
-D{i:53;anchors_height:100;anchors_width:100;anchors_x:312;anchors_y:214}D{i:52;anchors_height:100;anchors_width:100;anchors_x:312;anchors_y:214;invisible:true}
-D{i:63;invisible:true}
+D{i:6;anchors_height:163;anchors_width:1920;anchors_x:0;anchors_y:0}D{i:19;anchors_height:179;anchors_width:698;anchors_x:8;anchors_y:"-49"}
+D{i:25;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:26;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:24;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:28;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:27;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:23;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:31;anchors_height:200;anchors_width:200;anchors_x:36;anchors_y:118}D{i:32;anchors_height:200;anchors_width:100;anchors_x:83;anchors_y:242}
+D{i:30;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:35;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:41;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:42;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:40;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:36;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:33;anchors_height:200;anchors_width:100;anchors_x:83;anchors_y:367}D{i:29;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:21;anchors_height:200;anchors_width:200;anchors_x:705;anchors_y:45}D{i:20;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:43;anchors_height:179;anchors_width:698;anchors_x:8;anchors_y:"-49"}D{i:49;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:50;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:48;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:52;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:51;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:47;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:54;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:46;anchors_height:100;anchors_width:615;anchors_x:-258;anchors_y:0}D{i:45;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:44;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:18;anchors_height:200;anchors_width:100;anchors_x:36;anchors_y:242}
+D{i:57;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118;invisible:true}
+D{i:58;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118;invisible:true}
+D{i:56;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118;invisible:true}
+D{i:60;anchors_height:200;anchors_width:200;anchors_x:36;anchors_y:118;invisible:true}
+D{i:59;anchors_height:200;anchors_width:200;anchors_x:36;anchors_y:118;invisible:true}
+D{i:55;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:5;anchors_height:163;anchors_width:1920;anchors_x:0;anchors_y:0}
+D{i:62;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118;invisible:true}
+D{i:63;anchors_height:100;anchors_width:100;anchors_x:312;anchors_y:214;invisible:true}
+D{i:61;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118;invisible:true}
+D{i:67;anchors_height:163;anchors_width:1920;anchors_x:0;anchors_y:0;invisible:true}
+D{i:68;anchors_height:163;anchors_width:1920;anchors_x:0;anchors_y:0;invisible:true}
+D{i:66;anchors_height:100;anchors_width:100;anchors_x:312;anchors_y:214;invisible:true}
+D{i:70;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118;invisible:true}
+D{i:71;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118;invisible:true}
+D{i:69;anchors_height:163;anchors_width:1920;anchors_x:0;anchors_y:0;invisible:true}
+D{i:73;invisible:true}D{i:74;invisible:true}D{i:72;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118;invisible:true}
+D{i:65;anchors_height:100;anchors_width:100;anchors_x:312;anchors_y:214;invisible:true}
+D{i:64;anchors_height:100;anchors_width:100;anchors_x:312;anchors_y:214;invisible:true}
 }
 ##^##*/
 

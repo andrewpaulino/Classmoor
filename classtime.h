@@ -46,10 +46,14 @@ private:
 signals:
     void updateComponents(QString lessonHeader, QString lessonResource, int numOfParticipants);
     void updateTimer(int timeInSeconds);
+    void messageSentConfirmed();
+    void messageSentFailed();
 public slots:
     void retrieveClasstimeDetails();
     void updateTime();
+    void postQuestion(QString questionText, bool isAnon);
     void leaveClasstime();
+
     void recievedMessage(QString m);
 };
 

@@ -41,13 +41,30 @@ void Classtime::updateTime()
     emit updateTimer(timeInSeconds);
 }
 
+void Classtime::postQuestion(QString questionText, bool isAnon) {
+
+    try {
+        classaskResponsePayload response;
+        response = lambda_client->postQuestion( util.convertQStringToAWSString(questionText), isAnon, creds);
+        qDebug() << response.statusCode << endl;
+        if (response.statusCode == 200) {
+            //ADD TIMEOUT
+            emit messageSentConfirmed();
+        } else {
+            emit messageSentFailed();
+        }
+    } catch  (std::exception e){
+        qDebug() << e.what() << endl;
+    }
+}
+
 void Classtime::leaveClasstime()
 {
     try {
         bool result = false;
         result = lambda_client->leaveClasstime( creds.studentId, util.convertStdStringToAWSString( intialLoad.classtimeId ), creds.classroomId, util.convertStdStringToAWSString(intialLoad.classtimeSQSUrl));
         if (result) {
-//            sqs_client->closePolling();
+            //            sqs_client->closePolling();
         }
     } catch (std::exception e) {
         qDebug() << e.what() << endl;
@@ -122,7 +139,7 @@ bool Classtime::readFromFile()
 Classtime::~Classtime()
 {
     qDebug() << "DESTROYING CLASSTIME" << endl;
-        sqs_client->closePolling();
+    sqs_client->closePolling();
 }
 
 

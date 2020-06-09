@@ -28,9 +28,26 @@ Item {
             classtimeUi.timeText.text = hours + " Hours and " + minutes + " minutes and " + seconds + " seconds";
         }
         onUpdateComponents: {
-            console.log("here")
+
             classtimeUi.participants.text = numOfParticipants;
             classtimeUi.lessonHeader.text = lessonHeader;
+            classtimeUi.webView.url = lessonResource;
+
+        }
+        onMessageSentConfirmed: {
+            classtimeUi.messageSent = true;
+            console.log("message sent")
+//            setTimeout( function(){
+//                classtimeUi.messageSent = false;
+//            },5000);
+
+        }
+        onMessageSentFailed: {
+            classtimeUi.messageFailed = true;
+
+//            setTimeout(function(){
+//                classtimeUi.messageFailed = false;
+//            },5000);
 
         }
     }
@@ -43,10 +60,22 @@ Item {
         }
         leaveButtonMouseArea.onPressed: {
             //            backgroundRect.color = "#550bb3"
-            console.log("here")
+            //            console.log("here")
 
             stackView.push("Modules.qml");
             classtime.leaveClasstime();
+        }
+        askButtonMouseArea.onPressed: {
+            console.log("OVER HERE STUPID")
+            if (classtimeUi.questionField.text !== "") {
+                classtimeUi.noInputInQuestionField = false;
+                classtime.postQuestion(questionField.text, classtimeUi.anonSwitch.position == 0.0 ? false : true);
+            } else {
+                console.log("Missing filed")
+                classtimeUi.noInputInQuestionField = true;
+            }
+
+
         }
 
     }
