@@ -45,7 +45,7 @@ void Classtime::postQuestion(QString questionText, bool isAnon) {
 
     try {
         classaskResponsePayload response;
-        response = lambda_client->postQuestion( util.convertQStringToAWSString(questionText), isAnon, creds);
+        response = lambda_client->postQuestion( util.convertQStringToAWSString(questionText), isAnon, util.convertStdStringToAWSString( intialLoad.classtimeId), creds);
         qDebug() << response.statusCode << endl;
         if (response.statusCode == 200) {
             //ADD TIMEOUT
@@ -99,6 +99,9 @@ void Classtime::recievedMessage(QString m)
 
     } else if (m == "ping") {
         sqs_client->sendMessage( creds.confirmation_client_sqs, creds.studentId );
+    } else if (m == "endClasstime") {
+        sqs_client->closePolling();
+        emit endClasstime();
     }
 }
 

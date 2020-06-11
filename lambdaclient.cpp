@@ -329,7 +329,7 @@ clastimeUpdatePayload lambdaClient::updateClasstime(Aws::String classtimeId, Aws
     }
 }
 
-classaskResponsePayload lambdaClient::postQuestion(Aws::String questionText, bool isAnon, userCredentials creds)
+classaskResponsePayload lambdaClient::postQuestion(Aws::String questionText, bool isAnon, Aws::String classtimeId, userCredentials creds)
 {
     Aws::String functionName = "classmoor-api-prod";
 
@@ -339,13 +339,14 @@ classaskResponsePayload lambdaClient::postQuestion(Aws::String questionText, boo
     invokeRequest.SetInvocationType(Aws::Lambda::Model::InvocationType::RequestResponse);
     invokeRequest.SetLogType(Aws::Lambda::Model::LogType::Tail);
     std::shared_ptr<Aws::IOStream> payload = Aws::MakeShared<Aws::StringStream>("body");
-
+    qDebug() << util.convertStdStringToQString(util.convertAWSStringToStdString( classtimeId) ) << endl;
     Aws::Utils::Json::JsonValue bodyObject;
     bodyObject.WithString("clientPath", "newQuestion");
     bodyObject.WithString("question", questionText);
     bodyObject.WithBool("isAnonymous", isAnon);
     bodyObject.WithString("studentId", creds.studentId);
     bodyObject.WithString("classroomId", creds.classroomId);
+    bodyObject.WithString("classtimeId", classtimeId);
 
     Aws::Utils::Json::JsonValue jsonPayload;
     jsonPayload.WithObject("body", bodyObject);

@@ -48,6 +48,7 @@ signals:
     void updateTimer(int timeInSeconds);
     void messageSentConfirmed();
     void messageSentFailed();
+    void endClasstime();
 public slots:
     void retrieveClasstimeDetails();
     void updateTime();

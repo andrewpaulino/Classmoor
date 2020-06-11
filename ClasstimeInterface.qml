@@ -34,6 +34,10 @@ Item {
             classtimeUi.webView.url = lessonResource;
 
         }
+        onEndClasstime: {
+            stackView.push('Modules.qml');
+        }
+
         onMessageSentConfirmed: {
             classtimeUi.messageSent = true;
             console.log("message sent")

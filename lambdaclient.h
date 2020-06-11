@@ -26,7 +26,7 @@ public:
     intitalizeClassroomPayload intializeUser(Aws::String studentId, Aws::String classmoorId);
     classCheckPayload checkInStudent(Aws::String student_id, Aws::String classroom_id);
     clastimeUpdatePayload updateClasstime(Aws::String classtimeId, Aws::String classroomId);
-    classaskResponsePayload postQuestion(Aws::String questionText, bool isAnon, userCredentials creds);
+    classaskResponsePayload postQuestion(Aws::String questionText, bool isAnon, Aws::String classtimeId, userCredentials creds);
     bool leaveClasstime(Aws::String studentId, Aws::String classtimeId, Aws::String classroomId, Aws::String tempSQSUrl);
     bool checkConnection();
     intitalizeClasstimePayload getClasstimeDetails( userCredentials v );
