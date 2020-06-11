@@ -2,14 +2,10 @@
 #define UTILITYFUNCTIONS_H
 
 #include <aws/core/Aws.h>
-//#include <iostream>
-//#include <aws/core/utils/Outcome.h>
-//#include <aws/core/utils/logging/DefaultLogSystem.h>
-//#include <aws/core/utils/logging/AWSLogging.h>
-//#include <stdexcept>
-//#include <fstream>
 #include <QDebug>
 #include <QString>
+
+// Payload Definitions
 typedef struct normalPayload {
     int statusCode;
     std::string bodyResponse;
@@ -76,7 +72,8 @@ class UtilityFunctions
 {
 public:
     UtilityFunctions();
-    //    Aws::String convertPayload(Aws::Utils::Json::JsonValue* v, int setting);
+
+    // String Conversation for different namespsaces (AWS, QString, std::string)
     std::string convertAWSStringToStdString (Aws::String v);
     QString convertStdStringToQString(std::string v);
     Aws::String convertStdStringToAWSString(std::string v);

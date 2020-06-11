@@ -63,6 +63,7 @@ void Modules::runIntialization()
 void Modules::intalizeState()
 {
 
+    // Initializing States For View Port
     if (intialLoad.isClasstime && intialLoad.isCheckedIn) {
         qDebug() << "ClassTime Is in session and you should be eligible to check in" << endl;
         emit changeState(1, util.convertStdStringToQString(intialLoad.lastCheckin),  util.convertStdStringToQString(intialLoad.lastClasstime), intialLoad.timeRemaining);
@@ -79,16 +80,14 @@ void Modules::intalizeState()
 
 }
 
-void Modules::joinClasstime(){
-     // Closing poll
-//    sqs_client->closePolling();
-//     emit changeState(5, "N/A", "N/A", 0);
-//     sqs_client->closePolling();
-}
 void Modules::activateTimer()
 {
+    // Intialized a timer from qt Library
     activeTimer = new QTimer(this);
     activeTimer->setInterval(1000);
+
+    // Connect SIGNAL to SLOT
+    // When timeout is reached, then time will be updated through class
     connect(activeTimer, SIGNAL(timeout()), this, SLOT(updateTime()));
     activeTimer->start();
 }

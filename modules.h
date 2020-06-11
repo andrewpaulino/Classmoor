@@ -2,7 +2,6 @@
 #define MODULES_H
 
 #include <QObject>
-#include "dynamoclient.h"
 #include "lambdaclient.h"
 #include <QFileInfo>
 #include <QQmlApplicationEngine>
@@ -34,12 +33,11 @@ public:
 private:
     QFutureWatcher<void> watcher;
     QFuture<void> future;
-    DynamoClient* dynamo_client;
     UtilityFunctions util;
     lambdaClient* lambda_client;
     userCredentials creds;
-    void intalizeState();
     intitalizeClassroomPayload intialLoad;
+    void intalizeState();
     bool readFromFile();
     SqsClient* sqs_client;
     void runMessageUpdates();
@@ -54,7 +52,6 @@ signals:
     void updateTimer(int timeInSec);
 public slots:
     void intialize();
-    void joinClasstime();
     void updateTime();
     void recievedMessage(QString m);
     void handleCheckin();

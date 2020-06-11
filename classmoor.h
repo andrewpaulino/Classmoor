@@ -2,8 +2,6 @@
 #define CLASSMOOR_H
 
 #include <QObject>
-#include "dynamoclient.h"
-#include "lambdaclient.h"
 #include <QFileInfo>
 #include <QQmlApplicationEngine>
 #include <QGuiApplication>
@@ -19,16 +17,12 @@ class Classmoor : public QObject
 public:
     Classmoor(){};
     Classmoor(QObject *parent) : QObject(parent) {}
-    Classmoor(QQmlApplicationEngine* e);
-    void intiateSetup();
-    QQmlApplicationEngine getEngine();
     bool isFirstTimeRunning();
-private:
-    QQmlApplicationEngine* engine;
+
 signals:
 
 public slots:
-    void checkIfSetupIsCompleted(bool check);
+
 };
 
 #endif // CLASSMOOR_H

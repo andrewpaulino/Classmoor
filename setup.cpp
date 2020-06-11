@@ -10,6 +10,8 @@ Setup::Setup(QObject *parent) : QObject(parent)
 bool Setup::writeToFile(joinClassroomPayload v)
 {
 
+    // Find User_Data in Cached Session Storage
+    // Temporary Solution...
     QString filename = "user_data.txt";
     QFile file(filename);
     if (file.open(QIODevice::ReadWrite)) {
@@ -28,14 +30,21 @@ void Setup::joinClassroom(QString code, QString name)
 
   if (_classCode != "" && _name != "") {
        emit filledOut(true);
+
+       // String Conversion
        std::string n = name.toStdString();
        std::string c = code.toStdString();
+
        QString result;
+
+       // String Conversion
        Aws::String awsName(n.c_str(), n.size());
        Aws::String awsCode(c.c_str(), c.size());
        bool isDone = false;
 
        try {
+
+           // Awaiting Payload
            joinClassroomPayload res = lambda_client->joinClassroom(awsName, awsCode);
            if (isDone && res.statusCode == 404) {
                emit results(false, true);
@@ -52,12 +61,10 @@ void Setup::joinClassroom(QString code, QString name)
            }
 
        } catch (std::runtime_error e) {
-            std::cout << e.what() << std::endl;
+            qDebug() << e.what() << endl;
        }
-
-
-
   } else {
+       // User Validation
        emit filledOut(false);
   }
 
@@ -66,6 +73,7 @@ void Setup::joinClassroom(QString code, QString name)
 
 void Setup::restartApplication()
 {
+    // This Will Retstart the appllication
     qApp->quit();
     QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
 }

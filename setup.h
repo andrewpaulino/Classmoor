@@ -2,7 +2,6 @@
 #define SETUP_H
 
 #include <QObject>
-#include "dynamoclient.h"
 #include "lambdaclient.h"
 #include <QFileInfo>
 #include <QQmlApplicationEngine>

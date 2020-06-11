@@ -3,7 +3,6 @@ import QtQuick.Controls 2.5
 import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.3
 import com.classmoor.setup 1.0
-import com.classmoor.classmoor 1.0
 import Qt.labs.calendar 1.0
 
 Page {
@@ -18,10 +17,6 @@ Page {
 
     Setup {
         id: setup
-    }
-
-    Classmoor {
-        id: classmoor
     }
 
     property bool isFilledOut: true

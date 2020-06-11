@@ -16,22 +16,20 @@ void SqsClient::startPolling(Aws::String queueUrl)
 SqsClient::~SqsClient()
 {
     watcher.waitForFinished();
-    qDebug() << "Cancelling Polling Thread" << endl;
-//    future.cancel();
+    qDebug() << "SQS: Cancelling Polling Thread" << endl;
 }
 
 void SqsClient::closePolling()
 {
-    qDebug() << "Closing POLLS" << endl;
+    qDebug() << "SQS: Closing Polls" << endl;
     closeThread = true;
     watcher.waitForFinished();
-    qDebug() << "Is Thread Still Running? " << watcher.isFinished() << endl;
+    qDebug() << "SQS: Is Thread Still Running? " << watcher.isFinished() << endl;
 }
 
 
 bool SqsClient::start() {
     if (closeThread) {
-        qDebug() << "Ending!" << endl;
         return true;
     }
     Aws::String queue_url = sqsUrl;
@@ -45,12 +43,12 @@ bool SqsClient::start() {
     auto outcome = SetQueueAttributes(request);
     if (outcome.IsSuccess())
     {
-        std::cout << "Successfully updated long polling time for queue " <<
+        std::cout << "SQS: Successfully updated long polling time for queue " <<
                      queue_url << " to " << poll_time << std::endl;
     }
     else
     {
-        std::cout << "Error updating long polling time for queue " <<
+        std::cout << "SQS: Error updating long polling time for queue " <<
                      queue_url << ": " << outcome.GetError().GetMessage() <<
                      std::endl;
     }
@@ -58,7 +56,6 @@ bool SqsClient::start() {
 
     do {
         if (closeThread) {
-            qDebug() << "CLOSE THREA DBREAK" << endl;
             break;
         }
         auto rm_out = ReceiveMessage(rm_req);
@@ -66,7 +63,7 @@ bool SqsClient::start() {
 
         if (!rm_out.IsSuccess())
         {
-            std::cout << "Error receiving message from queue " << queue_url << ": "
+            std::cout << "SQS: Error receiving message from queue " << queue_url << ": "
                       << rm_out.GetError().GetMessage() << std::endl;
             return false;
         }
@@ -78,8 +75,6 @@ bool SqsClient::start() {
 
         if (messages.size() == 0)
         {
-
-        //Do nothing for now
         } else {
             const auto& message = messages[0];
 
@@ -88,8 +83,8 @@ bool SqsClient::start() {
             Aws::String a = message.GetBody();
 
             Aws::Utils::Json::JsonValue bodyObject(message.GetBody());
-            std::cout << util.convertAWSStringToStdString(bodyObject.View().GetString("Message")) << std::endl;
-//            qDebug() << "Incoming Message:" << util.convertStdStringToQString( util.convertAWSStringToStdString(bodyObject.View().GetString("Message")));
+
+            // Emits message to signal
             emit newMessage( util.convertStdStringToQString( util.convertAWSStringToStdString(bodyObject.View().GetString("Message"))));
 
             Aws::SQS::Model::DeleteMessageRequest dm_req;
@@ -100,6 +95,7 @@ bool SqsClient::start() {
             if (dm_out.IsSuccess())
             {
                qDebug() << "Message Deleted" << endl;
+               // Delete each message from QUEUE.
              }
             else
             {
@@ -120,7 +116,7 @@ bool SqsClient::start() {
 
 void SqsClient::sendMessage(Aws::String url, Aws::String message)
 {
-
+    // This is to send a message to confirmation SQS Queue
     Aws::SQS::Model::SendMessageRequest sm_req;
     sm_req.SetQueueUrl(url);
     sm_req.SetMessageBody(message);
@@ -140,6 +136,9 @@ void SqsClient::sendMessage(Aws::String url, Aws::String message)
 
 void SqsClient::purgeQueue(Aws::String url)
 {
+    // We purge the queue so we don't get unnessecary
+    // Updates from either classtime or automated
+    // Updates
     Aws::SQS::Model::PurgeQueueRequest pq_req;
     pq_req.SetQueueUrl(url);
 

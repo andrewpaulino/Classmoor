@@ -1,7 +1,6 @@
 import QtQuick 2.14
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
-import com.classmoor.classmoor 1.0
 import com.classmoor.modules 1.0
 import QtGraphicalEffects 1.0
 

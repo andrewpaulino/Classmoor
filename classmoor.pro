@@ -20,7 +20,6 @@ LIBS += -L/usr/local/lib -laws-cpp-sdk-core -laws-cpp-sdk-s3 -laws-cpp-sdk-sns -
 SOURCES += \
         classmoor.cpp \
         classtime.cpp \
-        dynamoclient.cpp \
         lambdaclient.cpp \
         main.cpp \
         modules.cpp \
@@ -50,7 +49,6 @@ HEADERS += \
     NodeIterator.h \
     classmoor.h \
     classtime.h \
-    dynamoclient.h \
     lambdaclient.h \
     linkedlist.h \
     modules.h \

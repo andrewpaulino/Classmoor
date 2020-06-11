@@ -1,7 +1,6 @@
 import QtQuick 2.14
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
-import com.classmoor.classmoor 1.0
 import com.classmoor.modules 1.0
 import QtGraphicalEffects 1.0
 import QtWebView 1.1
@@ -10,6 +9,7 @@ Page {
     id: page
     width: 1310
     height: 768
+    // WebView: PDF Viewer
     property alias webView: webView
     property alias anonSwitch: anonSwitch
     property alias askButtonMouseArea: askButtonMouseArea
@@ -22,8 +22,6 @@ Page {
     property alias participants: participants
     property alias lessonHeader: lessonHeader
     property alias timeText: timeText
-    //FIX LOADING
-    //    property bool isDoneLoading: true
     contentWidth: 4
     title: qsTr("Classtime")
     background: Rectangle {
@@ -937,15 +935,15 @@ D{i:24;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:28;a
 D{i:27;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:23;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
 D{i:31;anchors_height:200;anchors_width:200;anchors_x:36;anchors_y:118}D{i:32;anchors_height:200;anchors_width:100;anchors_x:83;anchors_y:242}
 D{i:30;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:35;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
-D{i:41;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:42;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
-D{i:40;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:36;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:40;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:41;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:42;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:36;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
 D{i:33;anchors_height:200;anchors_width:100;anchors_x:83;anchors_y:367}D{i:29;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
 D{i:21;anchors_height:200;anchors_width:200;anchors_x:705;anchors_y:45}D{i:20;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
 D{i:43;anchors_height:179;anchors_width:698;anchors_x:8;anchors_y:"-49"}D{i:49;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
 D{i:50;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:48;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
 D{i:52;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:51;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
 D{i:47;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:54;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
-D{i:46;anchors_height:100;anchors_width:615;anchors_x:-258;anchors_y:0}D{i:45;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
+D{i:46;anchors_height:100;anchors_width:615;anchors_x:"-258";anchors_y:0}D{i:45;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}
 D{i:44;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118}D{i:18;anchors_height:200;anchors_width:100;anchors_x:36;anchors_y:242}
 D{i:57;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118;invisible:true}
 D{i:58;anchors_height:200;anchors_width:200;anchors_x:261;anchors_y:118;invisible:true}

@@ -33,16 +33,22 @@
 #include <fstream>
 #include <aws/sqs/model/PurgeQueueRequest.h>
 
+// SQS Client is inheriting the AWS Client. We do this, so we
+// can create multiple instances depending on what is nessecary for our
+// users.
 
 class SqsClient : public QObject, public Aws::SQS::SQSClient
 {
     Q_OBJECT
 public:
     explicit SqsClient(QObject *parent = nullptr);
+
+    // Polling SNS Class topic
     void startPolling(Aws::String queueUrl);
     SqsClient(Aws::Client::ClientConfiguration c) : Aws::SQS::SQSClient(c){
 
     };
+    // Close Polling
     ~SqsClient();
     void closePolling();
     bool start();

@@ -14,6 +14,8 @@ Item {
     Classtime {
         id: classtime
         onUpdateTimer: {
+
+            // {seconds} => {hours}::{minutes}::{seconds}
             let tempTime = timeInSeconds;
             let hours, minutes, seconds;
 
@@ -40,18 +42,11 @@ Item {
 
         onMessageSentConfirmed: {
             classtimeUi.messageSent = true;
-            console.log("message sent")
-//            setTimeout( function(){
-//                classtimeUi.messageSent = false;
-//            },5000);
 
         }
         onMessageSentFailed: {
             classtimeUi.messageFailed = true;
 
-//            setTimeout(function(){
-//                classtimeUi.messageFailed = false;
-//            },5000);
 
         }
     }
@@ -63,19 +58,14 @@ Item {
             color:"#F5F5F5"
         }
         leaveButtonMouseArea.onPressed: {
-            //            backgroundRect.color = "#550bb3"
-            //            console.log("here")
-
             stackView.push("Modules.qml");
             classtime.leaveClasstime();
         }
         askButtonMouseArea.onPressed: {
-            console.log("OVER HERE STUPID")
             if (classtimeUi.questionField.text !== "") {
                 classtimeUi.noInputInQuestionField = false;
                 classtime.postQuestion(questionField.text, classtimeUi.anonSwitch.position == 0.0 ? false : true);
             } else {
-                console.log("Missing filed")
                 classtimeUi.noInputInQuestionField = true;
             }
 

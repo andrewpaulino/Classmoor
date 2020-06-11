@@ -32,7 +32,6 @@ Item {
 
             if (!isDoneLoading) {
                 stackView.push("ClasstimeInterface.qml");
-                modules.joinClasstime();
             }
         }
     }
@@ -63,9 +62,8 @@ Item {
             }
             modulesForm.time.text = hours + ":" + minutes + ":" + seconds;
         }
-
         onChangeState: {
-            console.log("here2")
+
             modulesForm.lastCheckInMessage.text = classCheck_message;
             modulesForm.lastClasstimeMessage.text = classTime_message;
 
@@ -107,10 +105,8 @@ Item {
                 modulesForm.isStateThree = false
                 break;
             default:
-
                 modulesForm.isDoneLoading = false;
             }
-            console.log(modulesForm.isDoneLoading)
         }
     }
 

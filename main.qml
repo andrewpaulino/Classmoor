@@ -22,7 +22,6 @@ ApplicationWindow {
         width: 1310
         height: 768
         anchors.horizontalCenter: parent.horizontalCenter
-        //        anchors.verticalCenter: parent.verticalCenter
         initialItem: "Modules.qml"
     }
 

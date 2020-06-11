@@ -33,18 +33,17 @@ int main(int argc, char *argv[])
 
         QQmlApplicationEngine engine;
 
-
-
         Classmoor mainExecutive;
 
         QUrl url;
 
         //Register QML Types
+
+        // Instantiating Classes in the QML and UI Files.
         qmlRegisterType<Setup>("com.classmoor.setup", 1, 0, "Setup");
-        qmlRegisterType<Classmoor>("com.classmoor.classmoor", 1, 0, "Classmoor");
         qmlRegisterType<Modules>("com.classmoor.modules", 1, 0, "Modules");
         qmlRegisterType<Classtime>("com.classmoor.classtime", 1, 0, "Classtime");
-
+        qmlRegisterType<Classmoor>("com.classmoor.classmoor", 1, 0, "Classmoor");
 
         if (mainExecutive.isFirstTimeRunning()) {
             url = (QStringLiteral("qrc:/Setup.qml"));
@@ -53,7 +52,7 @@ int main(int argc, char *argv[])
         }
 
 
-
+        // Loadings
         QObject::connect(&(engine), &QQmlApplicationEngine::objectCreated, &app, [url](QObject *obj, const QUrl &objUrl) {
             if (!obj && url == objUrl)
                 QCoreApplication::exit(-1);
